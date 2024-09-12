@@ -74,9 +74,9 @@ Plugins/**/Intermediate/*
 DerivedDataCache/*
 
 # Large Asset Files
-Paragon*
-ModularSciFi/
-SciFi_Robot/
+Content/Paragon*
+Content/ModularSciFi/
+Content/SciFi_Robot/
 
 # External Actors
 __External*
