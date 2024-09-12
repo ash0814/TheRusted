@@ -1,6 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# Rider user specific files
+.idea/
+
 # Compiled Object files
 *.slo
 *.lo
@@ -77,6 +80,9 @@ DerivedDataCache/*
 Content/Paragon*
 Content/ModularSciFi/
 Content/SciFi_Robot/
+
+# Starter Contents
+Content/StarterContent/*
 
 # External Actors
 __External*
