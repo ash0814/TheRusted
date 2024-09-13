@@ -25,7 +25,7 @@ ACPlayer::ACPlayer()
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->SetupAttachment(RootComponent);
 	SpringArmComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 50.0f), FRotator(-20.0f, 0.0f, 0.0f));
-	SpringArmComp->TargetArmLength = 300;
+	SpringArmComp->TargetArmLength = 400;
 	SpringArmComp->bUsePawnControlRotation = true;
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));

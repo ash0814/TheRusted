@@ -14,6 +14,12 @@ class THERUSTED_API ACPlayer_Muriel : public ACPlayer
 {
 	GENERATED_BODY()
 	
-	public:
-		void Attack();
+public:
+	void Attack();
+
+	void SpawnBullet();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
+	TSubclassOf<class ACBullet_Muriel> magazine;
+
+
 };
