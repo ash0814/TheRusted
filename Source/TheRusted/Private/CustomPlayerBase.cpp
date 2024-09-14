@@ -37,7 +37,7 @@ ACustomPlayerBase::ACustomPlayerBase()
 void ACustomPlayerBase::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	//Add Mapping Context (Enhanced Input)
 	if(APlayerController* Playercontroller = Cast<APlayerController>(GetController()))
 	{
@@ -55,6 +55,16 @@ void ACustomPlayerBase::Tick(float DeltaTime)
 
 	//Status Debugging
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("MaxHP : %.2f\nHP : %.2f\nMaxEP : %.2f\nEP : %.2f\nMaxSP : %d\nSP : %d\nMaxULTGauge : %.2f\nULTGauge : %.2f"), BasicStatus.MaxHP, BasicStatus.HP, BasicStatus.MaxEP, BasicStatus.EP, BasicStatus.MaxSP, BasicStatus.SP, BasicStatus.MaxULTGauge, BasicStatus.ULTGauge));
+
+	if(!bCanAttack)
+	{
+		CurrentTime += DeltaTime;
+		if(CurrentTime >= PrimaryDelay)
+		{
+			bCanAttack = true;
+			CurrentTime = 0.0f;
+		}
+	}
 }
 
 // Called to bind functionality to input
@@ -107,11 +117,22 @@ void ACustomPlayerBase::_LookVertical(const FInputActionValue& Value)
 void ACustomPlayerBase::_Primary(const FInputActionValue& Value)
 {
 	//Primary Attack
+	if(bCanAttack)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, PrimaryDelay, FColor::Cyan, FString::Printf(TEXT("Primary")));
+		CurrentTime = 0.0f;
+		bCanAttack = false;
+		if(UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance())
+		{
+			PlayAnimMontage(PrimaryMontage);
+		}
+	}
 }
 
 void ACustomPlayerBase::_SpawnPrimary()
 {
-	
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("SpawnPrimary")));
+	GetWorld()->SpawnActor<AActor>(PrimaryPool, GetActorLocation(), FRotator(0, 0, 0));
 }
 
 void ACustomPlayerBase::_SpecialAttack(const FInputActionValue& Value)

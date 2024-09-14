@@ -29,7 +29,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// public variable
+	// public variables
 	
 	// Input & Movement
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input)
@@ -57,8 +57,6 @@ public:
 
 	//Animation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-	class UAnimInstance* AnimInstance;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	class UAnimMontage* PrimaryMontage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	class UAnimMontage* SpecialAttackMontage;
@@ -70,7 +68,10 @@ public:
 	TSubclassOf<class AActor> PrimaryPool;
 	
 protected:
-	// protected variable
+	// protected variables
+
+	// Timer resource
+	float CurrentTime = 0.0f;
 	
 	// Player Status
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Status)
@@ -82,9 +83,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Status)
 	float EPConsumptionPerSecond = 20.0f;
 private:
+	// Private variable
+	bool bCanAttack = true;
+	
 public:
 	
-	// Function
+	// Functions
 	
 	// Status
 	FBasicStatus GetBasicStatus() const { return BasicStatus; }

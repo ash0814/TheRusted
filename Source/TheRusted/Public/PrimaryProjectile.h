@@ -25,8 +25,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	class USphereComponent* SphereCollisionComp;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
-	// class UNiagaraSystem* NiagaraSystem;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
-	// class UNiagaraComponent* NiagaraComp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+	class UProjectileMovementComponent* ProjectileMovement;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	class UNiagaraComponent* NiagaraComp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	class UNiagaraSystem* NiagaraSystem;
 };
