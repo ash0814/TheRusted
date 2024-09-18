@@ -21,5 +21,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
 	TSubclassOf<class ACBullet_Muriel> magazine;
 
+	// apply damage from other actor
+	UFUNCTION(BlueprintCallable)
+	void ApplyDamage(float amount);
 
+	// apply damage to the hit actor
+	UFUNCTION(BlueprintCallable)
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	// AnyDamage event
+	UFUNCTION(BlueprintCallable)
+	void AnyDamage(float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 };

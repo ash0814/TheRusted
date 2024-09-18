@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 UCLASS()
 class THERUSTED_API ACEnemy_General : public ACEnemy
 {
@@ -23,6 +24,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "General")
 	int32 dropItemID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
+	TSubclassOf<class ACBullet_Enemy> magazine;
 
 	virtual void Attack();
 	virtual void Die();

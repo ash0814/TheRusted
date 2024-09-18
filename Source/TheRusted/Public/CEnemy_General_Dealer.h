@@ -14,4 +14,10 @@ class THERUSTED_API ACEnemy_General_Dealer : public ACEnemy_General
 {
 	GENERATED_BODY()
 	
+public:
+	ACEnemy_General_Dealer();
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
+	float currentAttackTime;
 };

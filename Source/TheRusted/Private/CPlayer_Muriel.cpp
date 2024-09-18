@@ -29,4 +29,21 @@ void ACPlayer_Muriel::SpawnBullet()
 	DrawDebugDirectionalArrow(GetWorld(), _firePosition.GetLocation(), _firePosition.GetLocation() + _firePosition.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 }
 
+void ACPlayer_Muriel::ApplyDamage(float amount)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Apply Damage"));
+}
+
+void ACPlayer_Muriel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Hit"));
+	ApplyDamage(10.0f);
+}
+
+void ACPlayer_Muriel::AnyDamage(float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Any Damage"));
+	ApplyDamage(Damage);
+}
+
 
