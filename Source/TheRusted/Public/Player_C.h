@@ -1,0 +1,102 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "InputActionValue.h"
+#include "../zerohn/Public/CharacterStatus.h"
+#include "Player_C.generated.h"
+
+class UInputMappingContext;
+class UInputAction;
+
+UCLASS()
+class THERUSTED_API APlayer_C : public ACharacter
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this character's properties
+	APlayer_C();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class UCameraComponent* CameraComp;
+
+	// Input
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UInputMappingContext* PlayerMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* MoveIA;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* LookUpIA;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* TurnIA;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* JumpIA;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* AttackIA;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* UltimateIA;
+
+
+	void Move(const FInputActionValue& Value);
+	void LookUp(const FInputActionValue& Value);
+	void Turn(const FInputActionValue& Value);
+	void InputJump(const FInputActionValue& Value);
+	void InputAttack(const FInputActionValue& Value);
+	void InputUltimate(const FInputActionValue& Value);
+
+	FVector MoveDirection;
+
+	// Attack Animation
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AttackAnimMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* StrongAttackAnimMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* HitAnimMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* UltimateAnimMontage;
+
+	bool bCanStrongAttack;
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack();
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void StrongAttack();
+
+	virtual void Ultimate();
+
+	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
+	FBasicStatus BasicStatus;
+
+
+};
