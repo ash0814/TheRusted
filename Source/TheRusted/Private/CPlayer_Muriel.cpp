@@ -13,12 +13,35 @@ void ACPlayer_Muriel::Attack()
 	}
 }
 
+void ACPlayer_Muriel::StrongAttack()
+{
+	UAnimInstance* _animInstance = GetMesh()->GetAnimInstance();
+	if (_animInstance && StrongAttackAnimMontage) {
+		// print _animInstance Name
+		_animInstance->Montage_Play(StrongAttackAnimMontage);
+	}
+}
+
+void ACPlayer_Muriel::Ultimate()
+{
+	UAnimInstance* _animInstance = GetMesh()->GetAnimInstance();
+	if (_animInstance && UltimateAnimMontage) {
+		// print _animInstance Name
+		_animInstance->Montage_Play(UltimateAnimMontage);
+	}
+	//SpawnBullet();
+}
+
+
+
 void ACPlayer_Muriel::SpawnBullet()
 {
 	//WeaponAttachPointR
 
 	FTransform _firePosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
-	_firePosition.SetRotation(GetActorForwardVector().Rotation().Quaternion());
+	//_firePosition.SetRotation(GetActorForwardVector().Rotation().Quaternion());
+	// set rotation to camera forward vector
+	_firePosition.SetRotation(GetControlRotation().Quaternion());
 	GetWorld()->SpawnActor<ACBullet_Muriel>(magazine, _firePosition);
 	
 	//FTransform SocketTransform = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
@@ -31,18 +54,14 @@ void ACPlayer_Muriel::SpawnBullet()
 
 void ACPlayer_Muriel::ApplyDamage(float amount)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Apply Damage"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));
+	currentHP -= amount;
 }
 
-void ACPlayer_Muriel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Hit"));
-	ApplyDamage(10.0f);
-}
 
 void ACPlayer_Muriel::AnyDamage(float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Any Damage"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Muriel Any Damage"));
 	ApplyDamage(Damage);
 }
 

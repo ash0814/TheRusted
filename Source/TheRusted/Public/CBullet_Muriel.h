@@ -32,10 +32,10 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Particle)
 	class UParticleSystemComponent* ParticleComp;
 
-    UFUNCTION(BlueprintCallable)
-	// apply damage to the hit actor
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 private:
 	void Die();
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

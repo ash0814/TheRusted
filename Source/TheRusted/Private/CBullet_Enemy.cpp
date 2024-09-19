@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "CPlayer_Muriel.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ACBullet_Enemy::ACBullet_Enemy()
@@ -52,17 +53,11 @@ void ACBullet_Enemy::Tick(float DeltaTime)
 
 void ACBullet_Enemy::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Enemy Bullet Hit"));
-	ApplyDamage(OtherActor);
-}
-
-void ACBullet_Enemy::ApplyDamage(AActor* OtherActor)
-{
-	auto player = Cast<ACPlayer_Muriel>(OtherActor);
-	if (player)
+	if (OtherActor && OtherActor != this && OtherComp)
 	{
-		player->ApplyDamage(10);
+		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
+	Die();
 }
 
 void ACBullet_Enemy::Die()

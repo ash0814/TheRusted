@@ -34,10 +34,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
-	// apply damage to the hit actor
-	UFUNCTION(BlueprintCallable)
-	void ApplyDamage(AActor* OtherActor);
 private:
 	void Die();
 };

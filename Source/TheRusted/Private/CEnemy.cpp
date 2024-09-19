@@ -2,6 +2,8 @@
 
 
 #include "CEnemy.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 
 // Sets default values
 ACEnemy::ACEnemy()
@@ -30,5 +32,15 @@ void ACEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+float ACEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Enemy took damage!"));
+	// effect particle
+	// damage effect initialization
+	UParticleSystem* DamageEffect = LoadObject<UParticleSystem>(nullptr, TEXT("/Script/Engine.ParticleSystem'/Game/ParagonMuriel/FX/Particles/Abilities/Primary/FX/P_Muriel_Primary_HitWorld.P_Muriel_Primary_HitWorld'"));
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DamageEffect, GetActorLocation(), FRotator::ZeroRotator, true);
+	return 0.0f;
 }
 

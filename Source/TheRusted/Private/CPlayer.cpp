@@ -20,6 +20,7 @@ ACPlayer::ACPlayer()
 	{
 		GetMesh()->SetSkeletalMesh(InitMesh.Object);
 		GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
+		//GetMesh()->OnComponentHit.AddDynamic(this, &ACPlayer::OnHit);
 	}
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
@@ -79,7 +80,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(TurnIA, ETriggerEvent::Triggered, this, &ACPlayer::Turn);
 		EnhancedInputComponent->BindAction(JumpIA, ETriggerEvent::Triggered, this, &ACPlayer::InputJump);
 		EnhancedInputComponent->BindAction(AttackIA, ETriggerEvent::Started, this, &ACPlayer::InputAttack);
-		EnhancedInputComponent->BindAction(StrongAttackIA, ETriggerEvent::Started, this, &ACPlayer::InputStrongAttack);
+		EnhancedInputComponent->BindAction(UltimateIA, ETriggerEvent::Triggered, this, &ACPlayer::InputUltimate);
 	}
 }
 
@@ -115,19 +116,17 @@ void ACPlayer::InputJump(const FInputActionValue& Value)
 
 void ACPlayer::InputAttack(const FInputActionValue& Value)
 {
-	Attack();
+	float _inputValue = Value.Get<float>();
+	if (_inputValue > 0.0f)
+		Attack();
+	else
+		StrongAttack();
+
 }
 
-void ACPlayer::InputStrongAttack(const FInputActionValue& Value)
+void ACPlayer::InputUltimate(const FInputActionValue& Value)
 {
-	if (bCanStrongAttack)
-	{
-		UAnimInstance* _animInstance = GetMesh()->GetAnimInstance();
-		if (_animInstance && AttackAnimMontage) {
-			_animInstance->Montage_Play(AttackAnimMontage);
-		}
-	}
-	StrongAttack();
+	Ultimate();
 }
 
 void ACPlayer::Attack()
@@ -139,3 +138,15 @@ void ACPlayer::StrongAttack()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Strong Attack"));
 }
+
+void ACPlayer::Ultimate()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Ultimate"));
+}
+
+float ACPlayer::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
+	return 0.0f;
+}
+

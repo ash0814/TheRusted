@@ -16,6 +16,8 @@ class THERUSTED_API ACPlayer_Muriel : public ACPlayer
 	
 public:
 	void Attack();
+	void StrongAttack();
+	void Ultimate();
 
 	void SpawnBullet();
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
@@ -26,8 +28,8 @@ public:
 	void ApplyDamage(float amount);
 
 	// apply damage to the hit actor
-	UFUNCTION(BlueprintCallable)
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	//UFUNCTION(BlueprintCallable)
+	//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	// AnyDamage event
 	UFUNCTION(BlueprintCallable)

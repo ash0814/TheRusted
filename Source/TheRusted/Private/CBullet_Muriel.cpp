@@ -6,6 +6,8 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "CPlayer_Muriel.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ACBullet_Muriel::ACBullet_Muriel()
@@ -37,7 +39,7 @@ ACBullet_Muriel::ACBullet_Muriel()
 void ACBullet_Muriel::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SphereCollComp->OnComponentHit.AddDynamic(this, &ACBullet_Muriel::OnHit);
 }
 
 // Called every frame
@@ -50,17 +52,18 @@ void ACBullet_Muriel::Tick(float DeltaTime)
 
 }
 
-void ACBullet_Muriel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-
-	if (OtherActor && OtherActor != this && OtherComp) {
-	// display debug message with otheractor's name when hit something 
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Hit: %s"), *HitComp->GetName()));
-	}
-}
 
 void ACBullet_Muriel::Die()
 {
 	Destroy();
+}
+
+void ACBullet_Muriel::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor && OtherActor != this && OtherComp)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
+	}
+	//Die();
 }
 

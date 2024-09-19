@@ -23,7 +23,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -35,7 +35,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class UCameraComponent* CameraComp;
-	
+
 	// Input
 
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -44,7 +44,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* MoveIA;
 
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* LookUpIA;
 
@@ -58,14 +58,15 @@ public:
 	class UInputAction* AttackIA;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* StrongAttackIA;;
+	class UInputAction* UltimateIA;
+
 
 	void Move(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
 	void InputAttack(const FInputActionValue& Value);
-	void InputStrongAttack(const FInputActionValue& Value);
+	void InputUltimate(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
@@ -75,6 +76,12 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* StrongAttackAnimMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* HitAnimMontage;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* UltimateAnimMontage;
 
 	bool bCanStrongAttack;
 
@@ -101,4 +108,8 @@ public:
 	virtual void Attack();
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void StrongAttack();
+
+	virtual void Ultimate();
+
+	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };
