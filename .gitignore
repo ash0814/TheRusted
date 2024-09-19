@@ -82,7 +82,7 @@ Content/ModularSciFi/
 Content/SciFi_Robot/
 
 # Starter Contents
-Content/StarterContent/*
+Content/StarterContent/
 
 # External Actors
 __External*
