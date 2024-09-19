@@ -31,4 +31,7 @@ public:
 	class UNiagaraComponent* NiagaraComp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
 	class UNiagaraSystem* NiagaraSystem;
+	//Projectile Setting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VFX")
+	float ProjectileRange = 1000.f;
 };

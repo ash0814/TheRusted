@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PrimaryProjectile.h"
+#include "../Public/PrimaryProjectile.h"
 
 #include "Components/SphereComponent.h"
 #include "NiagaraComponent.h"
@@ -19,7 +19,9 @@ APrimaryProjectile::APrimaryProjectile()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	ProjectileMovement->UpdatedComponent = SphereCollisionComp;
-	ProjectileMovement->ProjectileGravityScale = 0.05f;
+	ProjectileMovement->ProjectileGravityScale = 0.0f;
+	// ProjectileMovement->MaxSpeed = ProjectileRange;
+	// ProjectileMovement->InitialSpeed = ProjectileRange;
 
 	NiagaraComp = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Niagara"));
 	NiagaraComp->SetupAttachment(RootComponent);
@@ -34,6 +36,8 @@ void APrimaryProjectile::BeginPlay()
 
 	if(NiagaraSystem)
 	{
+		FVector Force = FVector(ProjectileRange, 0.0f, 0.0f);
+		NiagaraComp->SetVariableVec3(FName("Target Loc"),Force);
 		NiagaraComp->SetAsset(NiagaraSystem);
 		NiagaraComp->Activate();
 	}

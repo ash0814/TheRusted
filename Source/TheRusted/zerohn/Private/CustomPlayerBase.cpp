@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TheRusted/Public/CustomPlayerBase.h"
+#include "TheRusted/zerohn/Public/CustomPlayerBase.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UniversalObjectLocators/AnimInstanceLocatorFragment.h"
 
 // Sets default values
 ACustomPlayerBase::ACustomPlayerBase()
@@ -30,7 +31,7 @@ ACustomPlayerBase::ACustomPlayerBase()
 
 	// Init Movement & Basic Status
 	GetCharacterMovement()->JumpZVelocity = 630.0f;
-	BasicStatus.InitStatus(FBasicStatus(100.0f, 100.0f, 90.0f, 50.0f, 3, 3, 1500.0f, 0.0f));
+	BasicStatus.InitStatus(FBasicStatus(100.0f, 100.0f, 90.0f, 90.0f, 3, 3, 1500.0f, 1500.0f));
 }
 
 // Called when the game starts or when spawned
@@ -132,7 +133,7 @@ void ACustomPlayerBase::_Primary(const FInputActionValue& Value)
 void ACustomPlayerBase::_SpawnPrimary()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, FString::Printf(TEXT("SpawnPrimary")));
-	GetWorld()->SpawnActor<AActor>(PrimaryPool, GetActorLocation(), FRotator(0, 0, 0));
+	GetWorld()->SpawnActor<AActor>(PrimaryPool, GetMesh()->GetSocketLocation(FName("Elec_Right")) + GetActorForwardVector() * 80.f, CameraComp->GetForwardVector().ToOrientationRotator());
 }
 
 void ACustomPlayerBase::_SpecialAttack(const FInputActionValue& Value)
@@ -143,6 +144,11 @@ void ACustomPlayerBase::_SpecialAttack(const FInputActionValue& Value)
 		//Check is enough EP
 		if(BasicStatus.EP >= GetWorld()->GetDeltaSeconds() * EPConsumptionPerSecond)
 		{
+			UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+			if(SpecialAttackMontage && !AnimInstance->Montage_IsPlaying(SpecialAttackMontage))
+			{
+				AnimInstance->Montage_Play(SpecialAttackMontage);
+			}
 			BasicStatus.EP -= GetWorld()->GetDeltaSeconds() * EPConsumptionPerSecond * InputValue;
 		}
 	}
@@ -153,6 +159,10 @@ void ACustomPlayerBase::_Ultimate(const FInputActionValue& Value)
 	if(BasicStatus.ULTGauge >= BasicStatus.MaxULTGauge)
 	{
 		BasicStatus.ULTGauge = 0;
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(AnimInstance)
+		{
+			AnimInstance->Montage_Play(UltimateMontage);
+		}
 	}
 }
-
