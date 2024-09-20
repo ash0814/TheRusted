@@ -19,11 +19,11 @@ class THERUSTED_API APlayer_Base : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayer_Base();
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -92,18 +92,25 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack();
+
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void StrongAttack();
 
+	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Ultimate();
 
-	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-	FTransform Calc_AttackTransform(FName socketName);
-	void MontagePlay(UAnimMontage* animMontage);
+	UFUNCTION()
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+	
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
-
+//Util
+public:
+	FTransform Calc_AttackTransform(FName socketName);
+	void MontagePlay(UAnimMontage* animMontage);
+	void SetSkeletalMesh(const TCHAR* ObjectToFind);
+	
 };

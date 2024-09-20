@@ -2,10 +2,19 @@
 #include "Player_Muriel.h"
 #include "GameFramework/Actor.h"
 #include "Bullet_Muriel.h"
+#include "Components/CapsuleComponent.h"
+
+APlayer_Muriel::APlayer_Muriel()
+{
+	GetCapsuleComponent()->SetCapsuleHalfHeight(100.0f);
+	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonMuriel/Characters/Heroes/Muriel/Meshes/Muriel_GDC.Muriel_GDC'"));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
+}
 
 void APlayer_Muriel::BeginPlay()
 {
 	Super::BeginPlay();
+
 	if (magazines.Num() > 0) {
 		magazine = magazines[0];
 	}

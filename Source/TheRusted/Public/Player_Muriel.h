@@ -14,6 +14,8 @@ class THERUSTED_API APlayer_Muriel : public APlayer_Base
 {
 	GENERATED_BODY()
 public:
+	APlayer_Muriel();
+public:
 	void BeginPlay() override;
 	void Attack();
 	void StrongAttack();
