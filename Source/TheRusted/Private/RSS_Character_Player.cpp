@@ -135,6 +135,9 @@ void ARSS_Character_Player::Input_Skill1(const struct FInputActionValue& inputVa
 
 void ARSS_Character_Player::MontagePlay(UAnimMontage* animMontage)
 {
+	if(animMontage == nullptr)
+		return;
+	
 	if(AnimInstance)
 	{		
 		AnimInstance->Montage_Play(animMontage);

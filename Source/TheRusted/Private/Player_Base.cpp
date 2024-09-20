@@ -169,3 +169,19 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName)
 	AttackTransform = UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
 	return AttackTransform;
 }
+
+void APlayer_Base::MontagePlay(UAnimMontage* animMontage)
+{
+	if(animMontage == nullptr)
+		return;
+	
+	if(AnimInstance)
+	{		
+		AnimInstance->Montage_Play(animMontage);
+	}
+	else
+	{		
+		AnimInstance = GetMesh()->GetAnimInstance();
+		MontagePlay(animMontage);
+	}
+}

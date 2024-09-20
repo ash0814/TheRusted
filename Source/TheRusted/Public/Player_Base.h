@@ -74,6 +74,8 @@ public:
 	FVector MoveDirection;
 
 	// Attack Animation
+	UAnimInstance* AnimInstance;
+
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AttackAnimMontage;
 
@@ -97,6 +99,7 @@ public:
 
 	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	FTransform Calc_AttackTransform(FName socketName);
+	void MontagePlay(UAnimMontage* animMontage);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
