@@ -23,6 +23,10 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void FireCoolTimer(float Duration,float deltaTime);
+private:
+	bool fireReady;
+	float fireTimerTime;
 
 public:	
 	// Called every frame
@@ -80,4 +84,10 @@ public:
 	bool isInvertLookUp = false;
 	UPROPERTY(EditAnywhere,Category="Attack")
 	TSubclassOf<class APBullet> magazine;
+	UPROPERTY(EditAnywhere,Category="Fire")
+	float fireCoolTime;
+	UPROPERTY(EditAnywhere,Category="Animation")
+	UAnimMontage* AttackAnimMontage;
+
+	void SpawnBullet();
 };

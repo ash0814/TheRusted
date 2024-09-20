@@ -33,6 +33,10 @@ ATestPlayer::ATestPlayer()
 	CameraComp->bUsePawnControlRotation = false;
 
 	bUseControllerRotationYaw = true;
+
+	fireCoolTime = 1.85f;
+	fireTimerTime = 0;
+	fireReady = true;
 }
 
 // Called when the game starts or when spawned
@@ -48,11 +52,24 @@ void ATestPlayer::BeginPlay()
 	}
 }
 
+void ATestPlayer::FireCoolTimer(float Duration, float deltaTime)
+{
+	if (fireTimerTime < Duration)
+	{
+		fireTimerTime += deltaTime;
+	}else
+	{
+		fireTimerTime = 0;
+		fireReady = true;
+	}
+}
+
 // Called every frame
 void ATestPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	if (!fireReady)FireCoolTimer(fireCoolTime,DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -122,6 +139,19 @@ void ATestPlayer::InputJump(const FInputActionValue& Value)
 }
 
 void ATestPlayer::InputAttack(const FInputActionValue& Value)
+{
+	if(fireReady)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(AnimInstance)
+		{
+			AnimInstance->Montage_Play(AttackAnimMontage);
+		}
+		fireReady = false;
+	}
+}
+
+void ATestPlayer::SpawnBullet()
 {
 	FTransform AttackPosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
 	GetWorld()->SpawnActor<APBullet>(magazine,AttackPosition);
