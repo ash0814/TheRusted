@@ -6,6 +6,7 @@
 
 void APlayer_Muriel_C::BeginPlay()
 {
+	Super::BeginPlay();
 	if (magazines.Num() > 0) {
 		magazine = magazines[0];
 	}
