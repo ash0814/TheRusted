@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/SkeletalMesh.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 APlayer_Base::APlayer_Base()
@@ -147,3 +148,24 @@ float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	return 0.0f;
 }
 
+FTransform APlayer_Base::Calc_AttackTransform(FName socketName)
+{
+	FHitResult Hit;
+	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * 20000;
+	FTransform AttackTransform;
+
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+	FVector AttackPosition = GetMesh()->GetSocketLocation(socketName);
+	FRotator LookAtRotator;
+	if(result)
+	{		
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,Hit.ImpactPoint);
+	}
+	else
+	{
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
+	}
+	AttackTransform = UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+	return AttackTransform;
+}

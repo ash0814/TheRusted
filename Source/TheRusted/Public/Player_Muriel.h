@@ -18,8 +18,7 @@ public:
 	void Attack();
 	void StrongAttack();
 	void Ultimate();
-	FTransform Calc_AttackTransform();
-
+	
 	void SpawnBullet();
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
 	TSubclassOf<class ABullet_Muriel> magazine;

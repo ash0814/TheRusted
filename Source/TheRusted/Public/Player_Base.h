@@ -96,6 +96,7 @@ public:
 	virtual void Ultimate();
 
 	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	FTransform Calc_AttackTransform(FName socketName);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")

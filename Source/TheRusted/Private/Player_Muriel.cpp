@@ -2,8 +2,6 @@
 #include "Player_Muriel.h"
 #include "GameFramework/Actor.h"
 #include "Bullet_Muriel.h"
-#include "Camera/CameraComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 
 void APlayer_Muriel::BeginPlay()
 {
@@ -46,33 +44,9 @@ void APlayer_Muriel::Ultimate()
 	//SpawnBullet();
 }
 
-FTransform APlayer_Muriel::Calc_AttackTransform()
-{
-	FHitResult Hit;
-	FVector StartLocation = CameraComp->GetComponentLocation();
-	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * 20000;
-	FTransform AttackTransform;
-
-	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
-	FVector S = GetMesh()->GetSocketLocation(FName("WeaponAttachPointR"));
-	if(result)
-	{		
-		FVector T = Hit.ImpactPoint;
-		FRotator R = UKismetMathLibrary::FindLookAtRotation(S,T);
-		AttackTransform = UKismetMathLibrary::MakeTransform(S, R);
-	}
-	else
-	{
-		FRotator R = UKismetMathLibrary::FindLookAtRotation(S,EndLocation);
-		AttackTransform = UKismetMathLibrary::MakeTransform(S, R);
-	}
-
-	return AttackTransform;
-}
-
 void APlayer_Muriel::SpawnBullet()
 {
-	FTransform _firePosition = Calc_AttackTransform();
+	FTransform _firePosition = Calc_AttackTransform(FName("WeaponAttachPointR"));
 	// FTransform _firePosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
 	// _firePosition.SetRotation(GetActorForwardVector().Rotation().Quaternion());
 	// set rotation to camera forward vector
