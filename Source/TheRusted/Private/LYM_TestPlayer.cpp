@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TheRusted/Public/TestPlayer.h"
+#include "TheRusted/Public/LYM_TestPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "PBullet.h"
+#include "LYM_PBullet.h"
 #include "TheRusted/TheRusted.h"
 
 // Sets default values
-ATestPlayer::ATestPlayer()
+ALYM_TestPlayer::ALYM_TestPlayer()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -40,7 +40,7 @@ ATestPlayer::ATestPlayer()
 }
 
 // Called when the game starts or when spawned
-void ATestPlayer::BeginPlay()
+void ALYM_TestPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
@@ -52,7 +52,7 @@ void ATestPlayer::BeginPlay()
 	}
 }
 
-void ATestPlayer::FireCoolTimer(float Duration, float deltaTime)
+void ALYM_TestPlayer::FireCoolTimer(float Duration, float deltaTime)
 {
 	if (fireTimerTime < Duration)
 	{
@@ -65,7 +65,7 @@ void ATestPlayer::FireCoolTimer(float Duration, float deltaTime)
 }
 
 // Called every frame
-void ATestPlayer::Tick(float DeltaTime)
+void ALYM_TestPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
@@ -73,22 +73,22 @@ void ATestPlayer::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void ATestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ALYM_TestPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	// Bind
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(MoveIA,ETriggerEvent::Triggered,this,&ATestPlayer::Move);
-		EnhancedInputComponent->BindAction(LookUpIA,ETriggerEvent::Triggered,this,&ATestPlayer::LookUp);
-		EnhancedInputComponent->BindAction(TurnIA,ETriggerEvent::Triggered,this,&ATestPlayer::Turn);
-		EnhancedInputComponent->BindAction(JunpIA,ETriggerEvent::Triggered,this,&ATestPlayer::InputJump);
-		EnhancedInputComponent->BindAction(AttackIA,ETriggerEvent::Triggered,this,&ATestPlayer::InputAttack);
+		EnhancedInputComponent->BindAction(MoveIA,ETriggerEvent::Triggered,this,&ALYM_TestPlayer::Move);
+		EnhancedInputComponent->BindAction(LookUpIA,ETriggerEvent::Triggered,this,&ALYM_TestPlayer::LookUp);
+		EnhancedInputComponent->BindAction(TurnIA,ETriggerEvent::Triggered,this,&ALYM_TestPlayer::Turn);
+		EnhancedInputComponent->BindAction(JunpIA,ETriggerEvent::Triggered,this,&ALYM_TestPlayer::InputJump);
+		EnhancedInputComponent->BindAction(AttackIA,ETriggerEvent::Triggered,this,&ALYM_TestPlayer::InputAttack);
 	}
 
 }
 
-void ATestPlayer::Move(const FInputActionValue& Value)
+void ALYM_TestPlayer::Move(const FInputActionValue& Value)
 {
 	// 입력 값을 FVector 형태로 가져옴
 	const FVector _CurrentValue = Value.Get<FVector>();
@@ -106,7 +106,7 @@ void ATestPlayer::Move(const FInputActionValue& Value)
 	MoveDirection = FVector::ZeroVector;
 }
 
-void ATestPlayer::LookUp(const FInputActionValue& Value)
+void ALYM_TestPlayer::LookUp(const FInputActionValue& Value)
 {
 	// _CurrentValue를 float형으로 초기화
 	float _CurrentValue;
@@ -125,7 +125,7 @@ void ATestPlayer::LookUp(const FInputActionValue& Value)
 	AddControllerPitchInput(_CurrentValue);
 }
 
-void ATestPlayer::Turn(const FInputActionValue& Value)
+void ALYM_TestPlayer::Turn(const FInputActionValue& Value)
 {
 	// 입력 값을 float 형태로 가져옴
 	const float _CurrentValue = Value.Get<float>();
@@ -133,12 +133,12 @@ void ATestPlayer::Turn(const FInputActionValue& Value)
 	AddControllerYawInput(_CurrentValue);
 }
 
-void ATestPlayer::InputJump(const FInputActionValue& Value)
+void ALYM_TestPlayer::InputJump(const FInputActionValue& Value)
 {
 	Jump();
 }
 
-void ATestPlayer::InputAttack(const FInputActionValue& Value)
+void ALYM_TestPlayer::InputAttack(const FInputActionValue& Value)
 {
 	if(fireReady)
 	{
@@ -151,8 +151,8 @@ void ATestPlayer::InputAttack(const FInputActionValue& Value)
 	}
 }
 
-void ATestPlayer::SpawnBullet()
+void ALYM_TestPlayer::SpawnBullet()
 {
 	FTransform AttackPosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
-	GetWorld()->SpawnActor<APBullet>(magazine,AttackPosition);
+	GetWorld()->SpawnActor<ALYM_PBullet>(magazine,AttackPosition);
 }

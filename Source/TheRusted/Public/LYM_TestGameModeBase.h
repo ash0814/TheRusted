@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "TestGameModeBase.generated.h"
+#include "LYM_TestGameModeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THERUSTED_API ATestGameModeBase : public AGameModeBase
+class THERUSTED_API ALYM_TestGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	

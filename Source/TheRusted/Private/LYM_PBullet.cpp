@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TheRusted/Public/PBullet.h"
+#include "TheRusted/Public/LYM_PBullet.h"
 
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
-APBullet::APBullet()
+ALYM_PBullet::ALYM_PBullet()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -36,7 +36,7 @@ APBullet::APBullet()
 }
 
 // Called when the game starts or when spawned
-void APBullet::BeginPlay()
+void ALYM_PBullet::BeginPlay()
 {
 	Super::BeginPlay();
 	FTimerHandle deathTimer;
@@ -47,7 +47,7 @@ void APBullet::BeginPlay()
 }
 
 // Called every frame
-void APBullet::Tick(float DeltaTime)
+void ALYM_PBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

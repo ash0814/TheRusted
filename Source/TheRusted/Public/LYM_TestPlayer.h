@@ -5,20 +5,20 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "TestPlayer.generated.h"
+#include "LYM_TestPlayer.generated.h"
 
 // Forward Declaration
 class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-class THERUSTED_API ATestPlayer : public ACharacter
+class THERUSTED_API ALYM_TestPlayer : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ATestPlayer();
+	ALYM_TestPlayer();
 
 protected:
 	// Called when the game starts or when spawned
@@ -83,7 +83,7 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Control Option")
 	bool isInvertLookUp = false;
 	UPROPERTY(EditAnywhere,Category="Attack")
-	TSubclassOf<class APBullet> magazine;
+	TSubclassOf<class ALYM_PBullet> magazine;
 	UPROPERTY(EditAnywhere,Category="Fire")
 	float fireCoolTime;
 	UPROPERTY(EditAnywhere,Category="Animation")

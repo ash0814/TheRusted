@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PBullet.generated.h"
+#include "LYM_PBullet.generated.h"
 
 UCLASS()
-class THERUSTED_API APBullet : public AActor
+class THERUSTED_API ALYM_PBullet : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APBullet();
+	ALYM_PBullet();
 
 protected:
 	// Called when the game starts or when spawned
