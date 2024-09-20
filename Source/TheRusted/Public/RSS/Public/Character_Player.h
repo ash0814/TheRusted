@@ -111,5 +111,6 @@ public:
 	class UParticleSystem* VFX_Spawn_Attack1;
 	
 	void Excute_Attack1();
-	
+
+	FTransform Calc_AttackTransform();
 };

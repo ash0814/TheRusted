@@ -3,6 +3,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Actor.h"
 #include "develop/Public/Bullet_Muriel_C.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void APlayer_Muriel_C::BeginPlay()
 {
@@ -45,12 +46,35 @@ void APlayer_Muriel_C::Ultimate()
 	//SpawnBullet();
 }
 
+FTransform APlayer_Muriel_C::Calc_AttackTransform()
+{
+	FHitResult Hit;
+	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * 20000;
+	FTransform AttackTransform;
 
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+	FVector S = GetMesh()->GetSocketLocation(FName("WeaponAttachPointR"));
+	if(result)
+	{		
+		FVector T = Hit.ImpactPoint;
+		FRotator R = UKismetMathLibrary::FindLookAtRotation(S,T);
+		AttackTransform = UKismetMathLibrary::MakeTransform(S, R);
+	}
+	else
+	{
+		FRotator R = UKismetMathLibrary::FindLookAtRotation(S,EndLocation);
+		AttackTransform = UKismetMathLibrary::MakeTransform(S, R);
+	}
+
+	return AttackTransform;
+}
 
 void APlayer_Muriel_C::SpawnBullet()
 {
-	FTransform _firePosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
-	_firePosition.SetRotation(GetActorForwardVector().Rotation().Quaternion());
+	FTransform _firePosition = Calc_AttackTransform();
+	// FTransform _firePosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
+	// _firePosition.SetRotation(GetActorForwardVector().Rotation().Quaternion());
 	// set rotation to camera forward vector
 	//_firePosition.SetRotation(GetControlRotation().Quaternion());
 	GetWorld()->SpawnActor<ABullet_Muriel_C>(magazine, _firePosition);
@@ -59,7 +83,7 @@ void APlayer_Muriel_C::SpawnBullet()
 	//FVector Location = SocketTransform.GetLocation();
 	//FRotator Rotation = SocketTransform.GetRotation().Rotator();
 
-	//// ¹æÇâÀ» µð¹ö±× È­»ìÇ¥·Î ±×·Áº¸±â
+	//// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½
 	DrawDebugDirectionalArrow(GetWorld(), _firePosition.GetLocation(), _firePosition.GetLocation() + _firePosition.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 }
 

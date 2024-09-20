@@ -171,4 +171,29 @@ void ACharacter_Player::Excute_Attack1()
 	GetWorld()->SpawnActor<AProjectile_Muriel_Attack1>(Attack1_Factory, AttackTransform);
 }
 
+FTransform ACharacter_Player::Calc_AttackTransform()
+{
+	FHitResult Hit;
+	FVector StartLocation = CameraComponent->GetComponentLocation();
+	FVector EndLocation = StartLocation + CameraComponent->GetForwardVector() * 20000;
+	FTransform AttackTransform;
+
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+	FVector S = GetMesh()->GetSocketLocation(FName("WeaponAttachPointR"));
+	if(result)
+	{		
+		FVector T = Hit.ImpactPoint;
+		FRotator R = UKismetMathLibrary::FindLookAtRotation(S,T);
+		AttackTransform = UKismetMathLibrary::MakeTransform(S, R);
+	}
+	else
+	{
+		FRotator R = UKismetMathLibrary::FindLookAtRotation(S,EndLocation);
+		AttackTransform = UKismetMathLibrary::MakeTransform(S, R);
+	}
+
+	return AttackTransform;
+}
+	
+
 
