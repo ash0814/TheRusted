@@ -7,6 +7,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Engine/SkeletalMesh.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -15,23 +16,21 @@ APlayer_Base::APlayer_Base()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCapsuleComponent()->SetCapsuleHalfHeight(100.0f);
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> InitMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonMuriel/Characters/Heroes/Muriel/Meshes/Muriel_GDC.Muriel_GDC'"));
 	if (InitMesh.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(InitMesh.Object);
-		GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -88.0f), FRotator(0.0f, -90.0f, 0.0f));
+		GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
 		//GetMesh()->OnComponentHit.AddDynamic(this, &APlayer_C::OnHit);
 	}
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->SetupAttachment(RootComponent);
-	/*SpringArmComp->SetRelativeLocationAndRotation(FVector(110.0f, 100.0f, 60.0f), FRotator(-20.0f, 0.0f, 0.0f));
-	SpringArmComp->TargetArmLength = 530;*/
-	SpringArmComp->bUsePawnControlRotation = true;
-
-	SpringArmComp->SetRelativeRotation(FRotator(0, 70, 90));
+	SpringArmComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 70.0f), FRotator(0, 70, 90));
 	SpringArmComp->TargetArmLength = 300;
-	SpringArmComp->SetRelativeLocation(FVector(0.0f, 0.0f, 70.0f));
+	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SocketOffset = FVector(0.0f, 60.0f, 0.0f);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
