@@ -3,8 +3,6 @@
 
 #include "Character_Base.h"
 
-#include "Camera/CameraComponent.h"
-
 // Sets default values
 ACharacter_Base::ACharacter_Base()
 {
