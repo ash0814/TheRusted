@@ -25,11 +25,7 @@ public:
 
 //Util
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	class UCameraComponent* CameraComp;
-	
 	UAnimInstance* AnimInstance;
-	
 	
 	void MontagePlay(UAnimMontage* animMontage);
 	void SetSkeletalMesh(const TCHAR* ObjectToFind);

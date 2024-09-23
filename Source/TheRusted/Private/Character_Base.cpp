@@ -10,9 +10,6 @@ ACharacter_Base::ACharacter_Base()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
-	CameraComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned

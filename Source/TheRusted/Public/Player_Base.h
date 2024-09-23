@@ -30,11 +30,15 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// Camera
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class UCameraComponent* CameraComp;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmComp;
 
 	// Input
-
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputMappingContext* PlayerMappingContext;
 
@@ -102,6 +106,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
+	// Util
 	FTransform Calc_AttackTransform(FName socketName);
 
 
