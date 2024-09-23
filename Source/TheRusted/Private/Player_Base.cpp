@@ -22,8 +22,7 @@ APlayer_Base::APlayer_Base()
 	SpringArmComp->TargetArmLength = 300;
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SocketOffset = FVector(0.0f, 60.0f, 0.0f);
-
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	
 	CameraComp->SetupAttachment(SpringArmComp);
 	CameraComp->bUsePawnControlRotation = false;
 
@@ -137,13 +136,13 @@ float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	return 0.0f;
 }
 
-FTransform APlayer_Base::Calc_AttackTransform(FName socketName)
+FTransform ACharacter_Base::Calc_AttackTransform(FName socketName)
 {
+	const float AttackRange = 20000;
 	FHitResult Hit;
 	FVector StartLocation = CameraComp->GetComponentLocation();
-	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * 20000;
-	FTransform AttackTransform;
-
+	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
+	
 	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
 	FVector AttackPosition = GetMesh()->GetSocketLocation(socketName);
 	FRotator LookAtRotator;
@@ -155,31 +154,5 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName)
 	{
 		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
 	}
-	AttackTransform = UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
-	return AttackTransform;
-}
-
-void APlayer_Base::MontagePlay(UAnimMontage* animMontage)
-{
-	if(animMontage == nullptr)
-		return;
-	
-	if(AnimInstance)
-	{		
-		AnimInstance->Montage_Play(animMontage);
-	}
-	else
-	{		
-		AnimInstance = GetMesh()->GetAnimInstance();
-		MontagePlay(animMontage);
-	}
-}
-
-void APlayer_Base::SetSkeletalMesh(const TCHAR* ObjectToFind)
-{
-	ConstructorHelpers::FObjectFinder<USkeletalMesh> InitMesh(ObjectToFind);
-	if (InitMesh.Succeeded())
-	{
-		GetMesh()->SetSkeletalMesh(InitMesh.Object);
-	}
+	return UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
 }
