@@ -4,6 +4,7 @@
 #include "Character_Base.h"
 
 #include "Camera/CameraComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ACharacter_Base::ACharacter_Base()
@@ -52,6 +53,27 @@ void ACharacter_Base::MontagePlay(UAnimMontage* animMontage)
 		AnimInstance = GetMesh()->GetAnimInstance();
 		MontagePlay(animMontage);
 	}
+}
+
+FTransform ACharacter_Base::Calc_AttackTransform(FName socketName)
+{
+	const float AttackRange = 20000;
+	FHitResult Hit;
+	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
+	
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+	FVector AttackPosition = GetMesh()->GetSocketLocation(socketName);
+	FRotator LookAtRotator;
+	if(result)
+	{		
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,Hit.ImpactPoint);
+	}
+	else
+	{
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
+	}
+	return UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
 }
 
 
