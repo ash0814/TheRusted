@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Player_Base.h"
 #include "RSS_Character_Player.generated.h"
 
 UCLASS()
-class THERUSTED_API ARSS_Character_Player : public ACharacter
+class THERUSTED_API ARSS_Character_Player : public APlayer_Base
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	ARSS_Character_Player();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
