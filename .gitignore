@@ -86,3 +86,7 @@ Content/StarterContent/
 
 # External Actors
 __External*
+
+#uproject file
+TheRusted.uproject
+*.uproject
