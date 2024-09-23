@@ -24,6 +24,12 @@ void ACharacter_Base::Tick(float DeltaTime)
 
 }
 
+float ACharacter_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+}
+
 void ACharacter_Base::SetSkeletalMesh(const TCHAR* ObjectToFind)
 {
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> InitMesh(ObjectToFind);

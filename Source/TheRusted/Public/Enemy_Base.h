@@ -17,11 +17,14 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	virtual void Tick(float DeltaTime) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	int32 dropItemID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
 	TSubclassOf<class AASH_CBullet_Enemy> magazine;
+
+	
 	
 };

@@ -98,9 +98,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Ultimate();
 
-	UFUNCTION()
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
-	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
