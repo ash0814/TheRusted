@@ -102,6 +102,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
+	FTransform Calc_AttackTransform(FName socketName);
+
 
 	
 };
