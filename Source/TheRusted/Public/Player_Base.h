@@ -63,6 +63,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* UltimateIA;
 
+	bool bCanMove = true;
+	bool bCanAttack = true;
 
 	void Move(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
@@ -112,5 +114,4 @@ public:
 	FTransform Calc_AttackTransform(FName socketName);
 	void MontagePlay(UAnimMontage* animMontage);
 	void SetSkeletalMesh(const TCHAR* ObjectToFind);
-	
 };
