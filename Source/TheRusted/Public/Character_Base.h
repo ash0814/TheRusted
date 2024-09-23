@@ -33,4 +33,5 @@ public:
 	FTransform Calc_AttackTransform(FName socketName);
 	void MontagePlay(UAnimMontage* animMontage);
 	void SetSkeletalMesh(const TCHAR* ObjectToFind);
+	void SetMaterial(int32 ElementIndex, const TCHAR* ObjectToFind);
 };

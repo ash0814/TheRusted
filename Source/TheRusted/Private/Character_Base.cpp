@@ -39,6 +39,15 @@ void ACharacter_Base::SetSkeletalMesh(const TCHAR* ObjectToFind)
 	}
 }
 
+void ACharacter_Base::SetMaterial(int32 ElementIndex,const TCHAR* ObjectToFind)
+{
+	ConstructorHelpers::FObjectFinder<UMaterialInterface> TempMaterial(ObjectToFind);
+	if (TempMaterial.Succeeded())
+	{
+		GetMesh()->SetMaterial(ElementIndex, TempMaterial.Object);
+	}	
+}
+
 void ACharacter_Base::MontagePlay(UAnimMontage* animMontage)
 {
 	if(animMontage == nullptr)
