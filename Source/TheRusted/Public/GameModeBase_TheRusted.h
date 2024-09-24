@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "GMB_TheRusted.generated.h"
+#include "GameModeBase_TheRusted.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THERUSTED_API AGMB_TheRusted : public AGameModeBase
+class THERUSTED_API AGameModeBase_TheRusted : public AGameModeBase
 {
 	GENERATED_BODY()
 	

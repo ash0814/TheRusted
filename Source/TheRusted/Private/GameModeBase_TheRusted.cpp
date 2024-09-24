@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GMB_TheRusted.h"
+#include "GameModeBase_TheRusted.h"
 
