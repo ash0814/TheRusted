@@ -22,6 +22,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-
+	void Die();
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

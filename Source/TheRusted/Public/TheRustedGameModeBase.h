@@ -14,4 +14,19 @@ class THERUSTED_API ATheRustedGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+private:
+	bool bCanStoreOpen = false;
+	bool bIsStoreOpen = false;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetCanStoreOpen(bool bCanOpen);
+	UFUNCTION(BlueprintCallable)
+	bool GetCanStoreOpen() { return bCanStoreOpen; }
+	UFUNCTION(BlueprintCallable)
+	bool GetIsStoreOpen() { return bIsStoreOpen; }
+	UFUNCTION(BlueprintCallable)
+	void SetIsStoreOpen(bool bIsOpen) { bIsStoreOpen = bIsOpen; }
 };

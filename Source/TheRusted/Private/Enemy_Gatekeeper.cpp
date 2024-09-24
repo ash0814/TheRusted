@@ -2,6 +2,7 @@
 
 
 #include "Enemy_Gatekeeper.h"
+#include "TheRustedGameModeBase.h"
 
 AEnemy_Gatekeeper::AEnemy_Gatekeeper()
 {
@@ -21,18 +22,25 @@ void AEnemy_Gatekeeper::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AEnemy_Gatekeeper::Die()
+{
+	// get gamemode
+	ATheRustedGameModeBase* _gameMode = Cast<ATheRustedGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (_gameMode)
+	{
+		// add score
+		_gameMode->SetCanStoreOpen(true);
+	}
+	Destroy();
+}
+
 float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	currentHP -= Damage;
 	if (currentHP <= 0)
 	{
-		// get actor that named "SM_Door_01" around this actor
-
-
-		//AActor* _door = 
-			//(FName("SM_Door_Merged_03"));
-		Destroy();
+		Die();
 	}
 	return 0.0f;
 }

@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
-#include "NotifyMurielAttack.generated.h"
+#include "NotifyAttackAnim.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THERUSTED_API UNotifyMurielAttack : public UAnimNotifyState
+class THERUSTED_API UNotifyAttackAnim : public UAnimNotifyState
 {
 	GENERATED_BODY()
 	
-public:
+protected:
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration) override;
 	virtual void NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime) override;
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
