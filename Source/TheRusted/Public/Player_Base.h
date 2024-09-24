@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character_Base.h"
 #include "InputActionValue.h"
-#include "KYH_CharacterStatus.h"
+#include "CharacterStatus.h"
 #include "Player_Base.generated.h"
 
 class UInputMappingContext;

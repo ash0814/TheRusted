@@ -42,6 +42,7 @@ void APlayer_Muriel::Ultimate()
 
 void APlayer_Muriel::SpawnBullet()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Spawn Bullet"));
 	FTransform _firePosition = Calc_AttackTransform(FName("WeaponAttachPointR"));
 	GetWorld()->SpawnActor<ABullet_Muriel>(magazine, _firePosition);
 
