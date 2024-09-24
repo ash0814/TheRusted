@@ -57,12 +57,13 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	// Bind Enhanced Input
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(MoveIA, ETriggerEvent::Triggered, this, &APlayer_Base::Move);
-		EnhancedInputComponent->BindAction(LookUpIA, ETriggerEvent::Triggered, this, &APlayer_Base::LookUp);
-		EnhancedInputComponent->BindAction(TurnIA, ETriggerEvent::Triggered, this, &APlayer_Base::Turn);
-		EnhancedInputComponent->BindAction(JumpIA, ETriggerEvent::Triggered, this, &APlayer_Base::InputJump);
-		EnhancedInputComponent->BindAction(AttackIA, ETriggerEvent::Started, this, &APlayer_Base::InputAttack);
-		EnhancedInputComponent->BindAction(UltimateIA, ETriggerEvent::Triggered, this, &APlayer_Base::InputUltimate);
+		EnhancedInputComponent->BindAction(IA_Move, ETriggerEvent::Triggered, this, &APlayer_Base::Move);
+		EnhancedInputComponent->BindAction(IA_LookUp, ETriggerEvent::Triggered, this, &APlayer_Base::LookUp);
+		EnhancedInputComponent->BindAction(IA_Turn, ETriggerEvent::Triggered, this, &APlayer_Base::Turn);
+		EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &APlayer_Base::InputJump);
+		EnhancedInputComponent->BindAction(IA_Attack_Primary, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Primary);
+		EnhancedInputComponent->BindAction(IA_Attack_Strong, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Strong);
+		EnhancedInputComponent->BindAction(IA_Attack_Ultimate, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Ultimate);
 	}
 }
 
@@ -71,8 +72,8 @@ void APlayer_Base::Move(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Warning, TEXT("Move"));
 	const FVector _CurrentValue = Value.Get<FVector>();
 	if (Controller) {
-		MoveDirection.X = _CurrentValue.Y;
-		MoveDirection.Y = _CurrentValue.X;
+		MoveDirection.X = _CurrentValue.X;
+		MoveDirection.Y = _CurrentValue.Y;
 	}
 
 	MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
@@ -101,34 +102,39 @@ void APlayer_Base::InputJump(const FInputActionValue& Value)
 	Jump();
 }
 
-void APlayer_Base::InputAttack(const FInputActionValue& Value)
+void APlayer_Base::Input_Attack_Primary(const FInputActionValue& Value)
 {
-	float _inputValue = Value.Get<float>();
-	if (_inputValue > 0.0f)
-		Attack();
-	else
-		StrongAttack();
-
+	Attack_Primary();
 }
 
-void APlayer_Base::InputUltimate(const FInputActionValue& Value)
+void APlayer_Base::Input_Attack_Strong(const FInputActionValue& Value)
 {
-	Ultimate();
+	Attack_Strong();
 }
 
-void APlayer_Base::Attack()
+void APlayer_Base::Input_Attack_Ultimate(const FInputActionValue& Value)
+{
+	Attack_Ultimate();
+}
+
+void APlayer_Base::Attack_Primary()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Attack"));
 }
 
-void APlayer_Base::StrongAttack()
+void APlayer_Base::Attack_Strong()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Strong Attack"));
 }
 
-void APlayer_Base::Ultimate()
+void APlayer_Base::Attack_Ultimate()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Ultimate"));
+}
+
+void APlayer_Base::Attack()
+{
+	
 }
 
 float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

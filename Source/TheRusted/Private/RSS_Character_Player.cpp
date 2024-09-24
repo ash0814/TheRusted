@@ -1,7 +1,7 @@
 
 #include "RSS_Character_Player.h"
 #include "GameFramework/Actor.h"
-#include "Bullet_Muriel.h"
+#include "Projectile_Base.h"
 #include "Components/CapsuleComponent.h"
 
 ARSS_Character_Player::ARSS_Character_Player()
@@ -23,29 +23,29 @@ void ARSS_Character_Player::BeginPlay()
 	}
 }
 
-void ARSS_Character_Player::Attack()
+void ARSS_Character_Player::Attack_Primary()
 {
-	MontagePlay(AttackAnimMontage);
+	MontagePlay(AM_Attack_Primary);
 	magazine = magazines[0];
 }
 
-void ARSS_Character_Player::StrongAttack()
+void ARSS_Character_Player::Attack_Strong()
 {
-	MontagePlay(StrongAttackAnimMontage);
+	MontagePlay(AM_Attack_Strong);
 	magazine = magazines[1];
 }
 
-void ARSS_Character_Player::Ultimate()
+void ARSS_Character_Player::Attack_Ultimate()
 {
-	MontagePlay(UltimateAnimMontage);
+	MontagePlay(AM_Attack_Ultimate);
 }
 
-void ARSS_Character_Player::SpawnBullet()
+void ARSS_Character_Player::Attack()
 {
-	FTransform _firePosition = Calc_AttackTransform(FName("WeaponAttachPointR"));
-	GetWorld()->SpawnActor<ABullet_Muriel>(magazine, _firePosition);
+	FTransform FireTransform = Calc_AttackTransform(FName("WeaponAttachPointR"));
+	GetWorld()->SpawnActor<AProjectile_Base>(magazine, FireTransform);
 
-	DrawDebugDirectionalArrow(GetWorld(), _firePosition.GetLocation(), _firePosition.GetLocation() + _firePosition.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
+	DrawDebugDirectionalArrow(GetWorld(), FireTransform.GetLocation(), FireTransform.GetLocation() + FireTransform.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 }
 
 void ARSS_Character_Player::ApplyDamage(float amount)

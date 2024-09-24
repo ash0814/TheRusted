@@ -43,61 +43,66 @@ public:
 	class UInputMappingContext* PlayerMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	class UInputAction* MoveIA;
+	class UInputAction* IA_Move;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* LookUpIA;
+	class UInputAction* IA_LookUp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	bool bLookUpInvert = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* TurnIA;
+	class UInputAction* IA_Turn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* JumpIA;
+	class UInputAction* IA_Jump;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* AttackIA;
+	class UInputAction* IA_Attack_Primary;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* UltimateIA;
+	class UInputAction* IA_Attack_Strong;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* IA_Attack_Ultimate;
 
 
 	void Move(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
-	void InputAttack(const FInputActionValue& Value);
-	void InputUltimate(const FInputActionValue& Value);
+	void Input_Attack_Primary(const FInputActionValue& Value);
+	void Input_Attack_Strong(const FInputActionValue& Value);
+	void Input_Attack_Ultimate(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
 	// Attack Animation
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* AttackAnimMontage;
+	class UAnimMontage* AM_Attack_Primary;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* StrongAttackAnimMontage;
+	class UAnimMontage* AM_Attack_Strong;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* HitAnimMontage;
+	class UAnimMontage* AM_Attack_Ultimate;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* UltimateAnimMontage;
+	class UAnimMontage* AM_Hit;
+	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack_Primary();
 
-	bool bCanStrongAttack;
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack_Strong();
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack_Ultimate();
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack();
-
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-	virtual void StrongAttack();
-
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-	virtual void Ultimate();
-
+	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:

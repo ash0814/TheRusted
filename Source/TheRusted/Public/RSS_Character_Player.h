@@ -14,16 +14,16 @@ public:
 	ARSS_Character_Player();
 public:
 	void BeginPlay() override;
-	void Attack();
-	void StrongAttack();
-	void Ultimate();
+	void Attack_Primary();
+	void Attack_Strong();
+	void Attack_Ultimate();
 	
-	void SpawnBullet();
+	void Attack();
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
-	TSubclassOf<class ABullet_Muriel> magazine;
+	TSubclassOf<class AProjectile_Base> magazine;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
-	TArray<TSubclassOf<class ABullet_Muriel>> magazines;
+	TArray<TSubclassOf<class AProjectile_Base>> magazines;
 
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage(float amount);

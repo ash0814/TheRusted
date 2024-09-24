@@ -29,6 +29,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Collision)
 	class USphereComponent* SphereComp;
 
+	UFUNCTION(Blueprintable)
 	virtual void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 	
 };
