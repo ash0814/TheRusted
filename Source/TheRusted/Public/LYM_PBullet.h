@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "LYM_PBullet.generated.h"
 
 UCLASS()
@@ -27,6 +28,12 @@ protected:
 	class UProjectileMovementComponent* PMovementComp;
 	UPROPERTY(VisibleAnywhere,Category="Collidor")
 	class USphereComponent* SphereCollComp;
-	UPROPERTY(VisibleAnywhere,Category="Mesh")
-	class UStaticMeshComponent* SMeshComp;
+	UPROPERTY(VisibleAnywhere, Category = Particle)
+	class UParticleSystemComponent* ParticleComp;
+	
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+public:
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	UProjectileMovementComponent* ProjectileMovementComp() const { return PMovementComp; }
 };

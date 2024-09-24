@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "LYM_PBullet.h"
 #include "LYM_TestPlayer.generated.h"
 
 // Forward Declaration
@@ -82,7 +83,7 @@ public:
 	// pitch 값을 변경해 위아래 움직임을 반대로 움직이게 하는 bool 자료형의 멤버변수
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Control Option")
 	bool isInvertLookUp = false;
-	UPROPERTY(EditAnywhere,Category="Attack")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="Attack")
 	TSubclassOf<class ALYM_PBullet> magazine;
 	UPROPERTY(EditAnywhere,Category="Fire")
 	float fireCoolTime;
