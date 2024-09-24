@@ -9,7 +9,6 @@ void UNotifyMurielAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeq
 	APlayer_Muriel* player = Cast<APlayer_Muriel>(MeshComp->GetOwner());
 	if (player)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Attack"));
 		player->SpawnBullet();
 	}
 }
