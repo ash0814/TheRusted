@@ -8,7 +8,7 @@
 void UANS_Muriel_Attack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                      float TotalDuration)
 {
-	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+	//Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 
 	APlayer_Base* player = Cast<APlayer_Base>(MeshComp->GetOwner());
 	if (player)
