@@ -21,6 +21,8 @@ void APlayer_Muriel::BeginPlay()
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Muriel Magazine is Empty"));
 	}
+
+	MontagePlay(AM_LevelStart);
 }
 
 void APlayer_Muriel::Attack_Primary()

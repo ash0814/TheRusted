@@ -78,7 +78,10 @@ public:
 
 	FVector MoveDirection;
 
-	// Attack Animation
+	// Animation
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_LevelStart;
+	
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Primary;
 

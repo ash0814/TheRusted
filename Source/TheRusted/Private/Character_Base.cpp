@@ -51,8 +51,10 @@ void ACharacter_Base::SetMaterial(int32 ElementIndex,const TCHAR* ObjectToFind)
 void ACharacter_Base::MontagePlay(UAnimMontage* animMontage)
 {
 	if(animMontage == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("MontagePlay animMontage == nullptr"));
 		return;
-	
+	}
 	if(AnimInstance)
 	{		
 		AnimInstance->Montage_Play(animMontage);
