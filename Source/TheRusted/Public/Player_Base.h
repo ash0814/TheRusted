@@ -19,46 +19,53 @@ class THERUSTED_API APlayer_Base : public ACharacter_Base
 public:
 	// Sets default values for this character's properties
 	APlayer_Base();
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-public:	
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	// Camera
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class UCameraComponent* CameraComp;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmComp;
 
 	// Input
-
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputMappingContext* PlayerMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	class UInputAction* MoveIA;
+	class UInputAction* IA_Move;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* LookUpIA;
+	class UInputAction* IA_LookUp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	bool bLookUpInvert = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* TurnIA;
+	class UInputAction* IA_Turn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* JumpIA;
+	class UInputAction* IA_Jump;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* AttackIA;
+	class UInputAction* IA_Attack_Primary;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	class UInputAction* UltimateIA;
+	class UInputAction* IA_Attack_Strong;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* IA_Attack_Ultimate;
 
 	bool bCanMove = true;
 	bool bCanAttack = true;
@@ -67,49 +74,46 @@ public:
 	void LookUp(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
-	void InputAttack(const FInputActionValue& Value);
-	void InputUltimate(const FInputActionValue& Value);
+	void Input_Attack_Primary(const FInputActionValue& Value);
+	void Input_Attack_Strong(const FInputActionValue& Value);
+	void Input_Attack_Ultimate(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
-	// Attack Animation
+	// Animation
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* AttackAnimMontage;
+	class UAnimMontage* AM_LevelStart;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* StrongAttackAnimMontage;
+	class UAnimMontage* AM_Attack_Primary;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* HitAnimMontage;
+	class UAnimMontage* AM_Attack_Strong;
 
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* UltimateAnimMontage;
+	class UAnimMontage* AM_Attack_Ultimate;
 
-	bool bCanStrongAttack;
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_Hit;
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack_Primary();
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack_Strong();
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack_Ultimate();
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack();
 
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-	virtual void StrongAttack();
-
-	UFUNCTION(BlueprintCallable, Category = "Attack")
-	virtual void Ultimate();
-
-	UFUNCTION()
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
-	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
-//Util
-public:
-	FTransform Calc_AttackTransform(FName socketName);
-	void MontagePlay(UAnimMontage* animMontage);
-	void SetSkeletalMesh(const TCHAR* ObjectToFind);
-};
+	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 20000);
 
-	
 };

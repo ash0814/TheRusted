@@ -9,7 +9,7 @@ void UASH_NotifyMurielAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	APlayer_Muriel* player = Cast<APlayer_Muriel>(MeshComp->GetOwner());
 	if (player)
 	{
-		player->SpawnBullet();
+		player->Attack();
 	}
 }
 

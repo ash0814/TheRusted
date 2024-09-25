@@ -22,15 +22,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 //Util
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	class UCameraComponent* CameraComp;
-	
 	UAnimInstance* AnimInstance;
 	
-	FTransform Calc_AttackTransform(FName socketName);
 	void MontagePlay(UAnimMontage* animMontage);
 	void SetSkeletalMesh(const TCHAR* ObjectToFind);
+	void SetMaterial(int32 ElementIndex, const TCHAR* ObjectToFind);
 };
