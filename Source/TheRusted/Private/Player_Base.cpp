@@ -8,7 +8,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/SkeletalMesh.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 // Sets default values
 APlayer_Base::APlayer_Base()
 {
@@ -24,6 +25,8 @@ APlayer_Base::APlayer_Base()
 	
 	CameraComp->SetupAttachment(SpringArmComp);
 	CameraComp->bUsePawnControlRotation = false;
+
+	bCanMove = true;
 
 }
 
@@ -66,16 +69,19 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void APlayer_Base::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move"));
-	const FVector _CurrentValue = Value.Get<FVector>();
-	if (Controller) {
-		MoveDirection.X = _CurrentValue.Y;
-		MoveDirection.Y = _CurrentValue.X;
-	}
+	if(bCanMove)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Move"));
+		const FVector _CurrentValue = Value.Get<FVector>();
+		if (Controller) {
+			MoveDirection.X = _CurrentValue.Y;
+			MoveDirection.Y = _CurrentValue.X;
+		}
 
-	MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
-	AddMovementInput(MoveDirection);
-	MoveDirection = FVector::ZeroVector;
+		MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
+		AddMovementInput(MoveDirection);
+		MoveDirection = FVector::ZeroVector;
+	}
 }
 
 void APlayer_Base::LookUp(const FInputActionValue& Value)
@@ -133,4 +139,51 @@ float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	return 0.0f;
+}
+
+FTransform APlayer_Base::Calc_AttackTransform(FName socketName)
+{
+	FHitResult Hit;
+	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * 20000;
+	FTransform AttackTransform;
+
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+	FVector AttackPosition = GetMesh()->GetSocketLocation(socketName);
+	FRotator LookAtRotator;
+	if(result)
+	{		
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,Hit.ImpactPoint);
+	}
+	else
+	{
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
+	}
+	AttackTransform = UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+	return AttackTransform;
+}
+
+void APlayer_Base::MontagePlay(UAnimMontage* animMontage)
+{
+	if(animMontage == nullptr)
+		return;
+	
+	if(AnimInstance)
+	{
+		AnimInstance->Montage_Play(animMontage);
+	}
+	else
+	{
+		AnimInstance = GetMesh()->GetAnimInstance();
+		MontagePlay(animMontage);
+	}
+}
+
+void APlayer_Base::SetSkeletalMesh(const TCHAR* ObjectToFind)
+{
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> InitMesh(ObjectToFind);
+	if (InitMesh.Succeeded())
+	{
+		GetMesh()->SetSkeletalMesh(InitMesh.Object);
+	}
 }

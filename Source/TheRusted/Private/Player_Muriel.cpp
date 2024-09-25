@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "Bullet_Muriel.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 APlayer_Muriel::APlayer_Muriel()
 {
@@ -25,19 +26,32 @@ void APlayer_Muriel::BeginPlay()
 
 void APlayer_Muriel::Attack()
 {
-	MontagePlay(AttackAnimMontage);
-	magazine = magazines[0];
+	if(bCanAttack)
+	{
+		MontagePlay(AttackAnimMontage);
+		magazine = magazines[0];
+	}
 }
 
 void APlayer_Muriel::StrongAttack()
 {
-	MontagePlay(StrongAttackAnimMontage);
-	magazine = magazines[1];
+	if(bCanAttack)
+	{
+		bCanMove = false;
+		bCanAttack = false;
+		MontagePlay(StrongAttackAnimMontage);
+		magazine = magazines[1];
+	}
 }
 
 void APlayer_Muriel::Ultimate()
 {
-	MontagePlay(UltimateAnimMontage);
+	if(bCanAttack)
+	{
+		bCanMove = false;
+		bCanAttack = false;
+		MontagePlay(UltimateAnimMontage);
+	}
 }
 
 void APlayer_Muriel::SpawnBullet()
