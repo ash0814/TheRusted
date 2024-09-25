@@ -113,7 +113,7 @@ public:
 	FBasicStatus BasicStatus;
 
 	// Util
-	FTransform Calc_AttackTransform(FName socketName);
+	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 20000);
 
 
 	

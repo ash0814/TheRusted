@@ -145,9 +145,8 @@ float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 	return 0.0f;
 }
 
-FTransform APlayer_Base::Calc_AttackTransform(FName socketName)
+FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRange)
 {
-	const float AttackRange = 20000;
 	FHitResult Hit;
 	FVector StartLocation = CameraComp->GetComponentLocation();
 	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
