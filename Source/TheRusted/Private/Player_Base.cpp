@@ -8,6 +8,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/SkeletalMesh.h"
+#include "InteractableInterface.h"
+
 
 // Sets default values
 APlayer_Base::APlayer_Base()
@@ -39,6 +41,10 @@ void APlayer_Base::BeginPlay()
 
 	GetController<APlayerController>()->PlayerCameraManager->ViewPitchMin = -45.0f;
 	GetController<APlayerController>()->PlayerCameraManager->ViewPitchMax = 15.0f;
+
+	FTimerHandle TraceTimerHandle;
+	GetWorldTimerManager().SetTimer(TraceTimerHandle, this, &APlayer_Base::PerformInteractionTrace, 0.2f, true);
+
 }
 
 // Called every frame
@@ -61,6 +67,7 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(JumpIA, ETriggerEvent::Triggered, this, &APlayer_Base::InputJump);
 		EnhancedInputComponent->BindAction(AttackIA, ETriggerEvent::Started, this, &APlayer_Base::InputAttack);
 		EnhancedInputComponent->BindAction(UltimateIA, ETriggerEvent::Triggered, this, &APlayer_Base::InputUltimate);
+		EnhancedInputComponent->BindAction(InteractIA, ETriggerEvent::Started, this, &APlayer_Base::InputInteract);
 	}
 }
 
@@ -114,6 +121,18 @@ void APlayer_Base::InputUltimate(const FInputActionValue& Value)
 	Ultimate();
 }
 
+void APlayer_Base::InputInteract(const FInputActionValue& Value)
+{
+	if (Value.Get<float>() > 0.0f) {
+		if (CachedInteractableActor) {
+			IInteractableInterface* InteractableActor = Cast<IInteractableInterface>(CachedInteractableActor);
+			if (InteractableActor) {
+				InteractableActor->Interact();
+			}
+		}
+	}
+}
+
 void APlayer_Base::Attack()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Attack"));
@@ -133,4 +152,45 @@ float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	return 0.0f;
+}
+
+void APlayer_Base::PerformInteractionTrace()
+{
+	FVector _Start = GetActorLocation();
+	FVector _End = GetActorLocation() + GetActorForwardVector() * 500.0f;
+	FHitResult _HitOut;
+
+	FCollisionQueryParams _TraceParams;
+	_TraceParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(_HitOut, _Start, _End, ECC_GameTraceChannel2, _TraceParams);
+
+	if (bHit) {
+		AActor* HitActor = _HitOut.GetActor();
+		if (HitActor) {
+			IInteractableInterface* InteractableActor = Cast<IInteractableInterface>(HitActor);
+			if (InteractableActor) {
+				if (CachedInteractableActor != HitActor) {
+					if (CachedInteractableActor) {
+						IInteractableInterface* CachedInteractable = Cast<IInteractableInterface>(CachedInteractableActor);
+						if (CachedInteractable) {
+							CachedInteractable->HideInteractionWidget();
+						}
+					}
+					CachedInteractableActor = HitActor;
+					InteractableActor->DisplayInteractionWidget();
+				}
+				//InteractableActor->Interact();
+			}
+		}
+	}
+	else {
+		if (CachedInteractableActor) {
+			IInteractableInterface* CachedInteractable = Cast<IInteractableInterface>(CachedInteractableActor);
+			if (CachedInteractable) {
+				CachedInteractable->HideInteractionWidget();
+			}
+			CachedInteractableActor = nullptr;
+		}
+	}
 }

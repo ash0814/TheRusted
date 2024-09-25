@@ -60,6 +60,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* UltimateIA;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* InteractIA;
+
 
 	void Move(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
@@ -67,6 +70,7 @@ public:
 	void InputJump(const FInputActionValue& Value);
 	void InputAttack(const FInputActionValue& Value);
 	void InputUltimate(const FInputActionValue& Value);
+	void InputInteract(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
@@ -102,6 +106,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
-
+private:
+	AActor* CachedInteractableActor;
+	void PerformInteractionTrace();
 	
 };
