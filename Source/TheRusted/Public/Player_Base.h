@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Character_Base.h"
 #include "InputActionValue.h"
 #include "KYH_CharacterStatus.h"
 #include "Player_Base.generated.h"
@@ -12,7 +12,7 @@ class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
-class THERUSTED_API APlayer_Base : public ACharacter
+class THERUSTED_API APlayer_Base : public ACharacter_Base
 {
 	GENERATED_BODY()
 
@@ -32,9 +32,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmComp;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	class UCameraComponent* CameraComp;
 
 	// Input
 
@@ -76,8 +73,6 @@ public:
 	FVector MoveDirection;
 
 	// Attack Animation
-	UAnimInstance* AnimInstance;
-
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AttackAnimMontage;
 
@@ -114,4 +109,7 @@ public:
 	FTransform Calc_AttackTransform(FName socketName);
 	void MontagePlay(UAnimMontage* animMontage);
 	void SetSkeletalMesh(const TCHAR* ObjectToFind);
+};
+
+	
 };

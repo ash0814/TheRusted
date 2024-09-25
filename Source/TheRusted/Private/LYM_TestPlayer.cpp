@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "LYM_PBullet.h"
+#include "Kismet/GameplayStatics.h"
 #include "TheRusted/TheRusted.h"
 
 // Sets default values
@@ -140,12 +141,17 @@ void ALYM_TestPlayer::InputJump(const FInputActionValue& Value)
 
 void ALYM_TestPlayer::InputAttack(const FInputActionValue& Value)
 {
+	FVector CameraLocation = CameraComp->GetComponentLocation();
+	FVector CameraForward = CameraComp->GetForwardVector();
+	FVector LineEnd = CameraLocation + (CameraForward * 2000.0f);
+	FVector Start = GetActorLocation();
 	if(fireReady)
 	{
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance)
 		{
 			AnimInstance->Montage_Play(AttackAnimMontage);
+			DrawDebugLine(GetWorld(),Start,LineEnd,FColor::Red,false,5.f,0,2.f);
 		}
 		fireReady = false;
 	}
@@ -153,6 +159,40 @@ void ALYM_TestPlayer::InputAttack(const FInputActionValue& Value)
 
 void ALYM_TestPlayer::SpawnBullet()
 {
-	FTransform AttackPosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
-	GetWorld()->SpawnActor<ALYM_PBullet>(magazine,AttackPosition);
+	// FTransform AttackPosition = GetMesh()->GetSocketTransform(TEXT("WeaponAttachPointR"));
+	// AttackPosition.SetRotation(GetActorForwardVector().Rotation().Quaternion());
+	// GetWorld()->SpawnActor<ALYM_PBullet>(magazine,AttackPosition);
+	if (CameraComp && GetMesh())  // 캐릭터의 메쉬 컴포넌트를 통해 소켓 위치를 가져옴
+	{
+		// 카메라의 위치 및 방향 정보
+		FVector CameraLocation = CameraComp->GetComponentLocation();
+		FVector CameraForward = CameraComp->GetForwardVector();
+
+		// 소켓 위치 (프로젝타일이 발사될 위치)
+		FVector HandLocation = GetMesh()->GetSocketLocation(FName("WeaponAttachPointR"));  // 소켓 이름을 사용하여 손 위치 가져옴
+
+		// 화면 중앙의 월드 좌표 얻기
+		FVector2D ScreenCenter = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()) * 0.5f;
+
+		FVector WorldLocation;
+		FVector WorldDirection;
+
+		// 화면 중앙의 방향 벡터를 월드 좌표로 변환
+		if (UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(GetWorld(), 0), ScreenCenter, WorldLocation, WorldDirection))
+		{
+			// 프로젝타일의 스폰 위치는 소켓 위치
+			FVector SpawnLocation = HandLocation;  // WeaponAttachPointR 소켓 위치를 기준으로 스폰
+
+			// 화면 중앙을 향하는 방향으로 회전 설정
+			FRotator SpawnRotation = WorldDirection.Rotation();
+
+			// 프로젝타일 스폰
+			ALYM_PBullet* Projectile = GetWorld()->SpawnActor<ALYM_PBullet>(magazine, SpawnLocation, SpawnRotation);
+			if (Projectile)
+			{
+				// 화면 중앙을 향한 방향으로 프로젝타일 이동 설정
+				Projectile->ProjectileMovementComp()->Velocity = WorldDirection * Projectile->ProjectileMovementComp()->InitialSpeed;
+			}
+		}
+	}
 }

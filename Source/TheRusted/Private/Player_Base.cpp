@@ -10,7 +10,6 @@
 #include "Engine/SkeletalMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-
 // Sets default values
 APlayer_Base::APlayer_Base()
 {
@@ -23,8 +22,7 @@ APlayer_Base::APlayer_Base()
 	SpringArmComp->TargetArmLength = 300;
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SocketOffset = FVector(0.0f, 60.0f, 0.0f);
-
-	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	
 	CameraComp->SetupAttachment(SpringArmComp);
 	CameraComp->bUsePawnControlRotation = false;
 
