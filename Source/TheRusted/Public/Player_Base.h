@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character_Base.h"
 #include "InputActionValue.h"
-#include "KYH_CharacterStatus.h"
+#include "CharacterStatus.h"
 #include "Player_Base.generated.h"
 
 class UInputMappingContext;
@@ -67,6 +67,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Attack_Ultimate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* IA_Interact;
+
 	bool bCanMove = true;
 	bool bCanAttack = true;
 
@@ -77,6 +80,7 @@ public:
 	void Input_Attack_Primary(const FInputActionValue& Value);
 	void Input_Attack_Strong(const FInputActionValue& Value);
 	void Input_Attack_Ultimate(const FInputActionValue& Value);
+	void InputInteract(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
@@ -116,4 +120,7 @@ public:
 
 	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 20000);
 
+private:
+	AActor* CachedInteractableActor;
+	void PerformInteractionTrace();
 };

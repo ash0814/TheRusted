@@ -36,6 +36,7 @@ void ACharacter_Base::SetSkeletalMesh(const TCHAR* ObjectToFind)
 	if (InitMesh.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(InitMesh.Object);
+		GetMesh()->SetRelativeLocationAndRotation(FVector(0,0,-90),FRotator(0,-90,0));
 	}
 }
 

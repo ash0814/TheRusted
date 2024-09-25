@@ -8,8 +8,10 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/SkeletalMesh.h"
-#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "InteractableInterface.h"
+
+
 // Sets default values
 APlayer_Base::APlayer_Base()
 {
@@ -22,7 +24,7 @@ APlayer_Base::APlayer_Base()
 	SpringArmComp->TargetArmLength = 300;
 	SpringArmComp->bUsePawnControlRotation = true;
 	SpringArmComp->SocketOffset = FVector(0.0f, 60.0f, 0.0f);
-	
+
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 	CameraComp->bUsePawnControlRotation = false;
@@ -43,6 +45,10 @@ void APlayer_Base::BeginPlay()
 
 	GetController<APlayerController>()->PlayerCameraManager->ViewPitchMin = -45.0f;
 	GetController<APlayerController>()->PlayerCameraManager->ViewPitchMax = 15.0f;
+
+	FTimerHandle TraceTimerHandle;
+	GetWorldTimerManager().SetTimer(TraceTimerHandle, this, &APlayer_Base::PerformInteractionTrace, 0.2f, true);
+
 }
 
 // Called every frame
@@ -65,25 +71,23 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(IA_Jump, ETriggerEvent::Triggered, this, &APlayer_Base::InputJump);
 		EnhancedInputComponent->BindAction(IA_Attack_Primary, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Primary);
 		EnhancedInputComponent->BindAction(IA_Attack_Strong, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Strong);
-		EnhancedInputComponent->BindAction(IA_Attack_Ultimate, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Ultimate);
+		EnhancedInputComponent->BindAction(IA_Attack_Ultimate, ETriggerEvent::Triggered, this, &APlayer_Base::Input_Attack_Ultimate);
+		EnhancedInputComponent->BindAction(IA_Interact, ETriggerEvent::Started, this, &APlayer_Base::InputInteract);
 	}
 }
 
 void APlayer_Base::Move(const FInputActionValue& Value)
 {
-	if(bCanMove)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Move"));
-		const FVector _CurrentValue = Value.Get<FVector>();
-		if (Controller) {
-			MoveDirection.X = _CurrentValue.X;
-			MoveDirection.Y = _CurrentValue.Y;
-		}
-
-		MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
-		AddMovementInput(MoveDirection);
-		MoveDirection = FVector::ZeroVector;
+	UE_LOG(LogTemp, Warning, TEXT("Move"));
+	const FVector _CurrentValue = Value.Get<FVector>();
+	if (Controller) {
+		MoveDirection.X = _CurrentValue.X;
+		MoveDirection.Y = _CurrentValue.Y;
 	}
+
+	MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
+	AddMovementInput(MoveDirection);
+	MoveDirection = FVector::ZeroVector;
 }
 
 void APlayer_Base::LookUp(const FInputActionValue& Value)
@@ -105,6 +109,18 @@ void APlayer_Base::Turn(const FInputActionValue& Value)
 void APlayer_Base::InputJump(const FInputActionValue& Value)
 {
 	Jump();
+}
+
+void APlayer_Base::InputInteract(const FInputActionValue& Value)
+{
+	if (Value.Get<float>() > 0.0f) {
+		if (CachedInteractableActor) {
+			IInteractableInterface* InteractableActor = Cast<IInteractableInterface>(CachedInteractableActor);
+			if (InteractableActor) {
+				InteractableActor->Interact();
+			}
+		}
+	}
 }
 
 void APlayer_Base::Input_Attack_Primary(const FInputActionValue& Value)
@@ -139,13 +155,11 @@ void APlayer_Base::Attack_Ultimate()
 
 void APlayer_Base::Attack()
 {
-	
+
 }
 
 float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	return 0.0f;
 }
@@ -155,18 +169,58 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRang
 	FHitResult Hit;
 	FVector StartLocation = CameraComp->GetComponentLocation();
 	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
-	
+
 	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
 	FVector AttackPosition = GetMesh()->GetSocketLocation(socketName);
 	FRotator LookAtRotator;
-	if(result)
-	{		
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,Hit.ImpactPoint);
+	if (result)
+	{
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition, Hit.ImpactPoint);
 	}
 	else
 	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition, EndLocation);
 	}
 	return UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+}
 
+void APlayer_Base::PerformInteractionTrace()
+{
+	FVector _Start = GetActorLocation();
+	FVector _End = GetActorLocation() + GetActorForwardVector() * 500.0f;
+	FHitResult _HitOut;
+
+	FCollisionQueryParams _TraceParams;
+	_TraceParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(_HitOut, _Start, _End, ECC_GameTraceChannel2, _TraceParams);
+
+	if (bHit) {
+		AActor* HitActor = _HitOut.GetActor();
+		if (HitActor) {
+			IInteractableInterface* InteractableActor = Cast<IInteractableInterface>(HitActor);
+			if (InteractableActor) {
+				if (CachedInteractableActor != HitActor) {
+					if (CachedInteractableActor) {
+						IInteractableInterface* CachedInteractable = Cast<IInteractableInterface>(CachedInteractableActor);
+						if (CachedInteractable) {
+							CachedInteractable->HideInteractionWidget();
+						}
+					}
+					CachedInteractableActor = HitActor;
+					InteractableActor->DisplayInteractionWidget();
+				}
+				//InteractableActor->Interact();
+			}
+		}
+	}
+	else {
+		if (CachedInteractableActor) {
+			IInteractableInterface* CachedInteractable = Cast<IInteractableInterface>(CachedInteractableActor);
+			if (CachedInteractable) {
+				CachedInteractable->HideInteractionWidget();
+			}
+			CachedInteractableActor = nullptr;
+		}
+	}
 }
