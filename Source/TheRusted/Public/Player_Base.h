@@ -19,12 +19,12 @@ class THERUSTED_API APlayer_Base : public ACharacter_Base
 public:
 	// Sets default values for this character's properties
 	APlayer_Base();
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
-public:	
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -34,7 +34,7 @@ public:
 	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class UCameraComponent* CameraComp;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmComp;
 
@@ -63,10 +63,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Attack_Strong;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Attack_Ultimate;
 
+	bool bCanMove = true;
+	bool bCanAttack = true;
 
 	void Move(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
@@ -81,7 +83,7 @@ public:
 	// Animation
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_LevelStart;
-	
+
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Primary;
 
@@ -93,7 +95,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Hit;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack_Primary();
 
@@ -105,16 +107,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack();
-	
+
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
-	// Util
 	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 20000);
 
-
-	
 };

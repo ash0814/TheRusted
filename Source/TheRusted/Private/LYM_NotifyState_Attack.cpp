@@ -4,8 +4,9 @@
 #include "LYM_NotifyState_Attack.h"
 
 void ULYM_NotifyState_Attack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-                                          float TotalDuration, const FAnimNotifyEventReference& EventReference)
+	float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, "NotifyBegin");
 	tpsPlayer = Cast<ALYM_TestPlayer>(MeshComp->GetOwner());
 
 	if(tpsPlayer)

@@ -8,8 +8,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Engine/SkeletalMesh.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-
 // Sets default values
 APlayer_Base::APlayer_Base()
 {
@@ -26,6 +26,8 @@ APlayer_Base::APlayer_Base()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 	CameraComp->bUsePawnControlRotation = false;
+
+	bCanMove = true;
 
 }
 
@@ -69,16 +71,19 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void APlayer_Base::Move(const FInputActionValue& Value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Move"));
-	const FVector _CurrentValue = Value.Get<FVector>();
-	if (Controller) {
-		MoveDirection.X = _CurrentValue.X;
-		MoveDirection.Y = _CurrentValue.Y;
-	}
+	if(bCanMove)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Move"));
+		const FVector _CurrentValue = Value.Get<FVector>();
+		if (Controller) {
+			MoveDirection.X = _CurrentValue.Y;
+			MoveDirection.Y = _CurrentValue.X;
+		}
 
-	MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
-	AddMovementInput(MoveDirection);
-	MoveDirection = FVector::ZeroVector;
+		MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
+		AddMovementInput(MoveDirection);
+		MoveDirection = FVector::ZeroVector;
+	}
 }
 
 void APlayer_Base::LookUp(const FInputActionValue& Value)
@@ -162,5 +167,6 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRang
 	{
 		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
 	}
-	return UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+	AttackTransform = UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+	return AttackTransform;
 }
