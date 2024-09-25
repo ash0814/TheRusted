@@ -18,6 +18,7 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	virtual void Tick(float DeltaTime) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	int32 dropItemID;
@@ -25,9 +26,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EnemyState")
 	float currentHP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float MaxHP;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
-	TSubclassOf<class AASH_CBullet_Enemy> magazine;
-	
+	float MaxHP;	
 };
