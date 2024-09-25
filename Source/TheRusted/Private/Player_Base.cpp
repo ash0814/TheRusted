@@ -69,7 +69,7 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void APlayer_Base::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move"));
+	//UE_LOG(LogTemp, Warning, TEXT("Move"));
 	const FVector _CurrentValue = Value.Get<FVector>();
 	if (Controller) {
 		MoveDirection.X = _CurrentValue.X;
