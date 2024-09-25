@@ -3,45 +3,52 @@
 
 #include "TheRusted/Public/LYM_PBullet.h"
 
+#include "LYM_TestPlayer.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 ALYM_PBullet::ALYM_PBullet()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	// collision
 	SphereCollComp = CreateDefaultSubobject<USphereComponent>(TEXT("MainCollidor"));
 	SphereCollComp->SetCollisionProfileName(TEXT("BlockAll"));
 	SphereCollComp->SetSphereRadius(13);
 	RootComponent = SphereCollComp;
+	// particle
+	ParticleComp = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MurielAttackBullet"));
+	ParticleComp->SetupAttachment(SphereCollComp);
+	ParticleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ParticleComp->bAutoActivate = true;
+	ParticleComp->bAutoDestroy = true;
 
-	SMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SMeshComp->SetupAttachment(SphereCollComp);
-	SMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	// 발사체 컴포넌트 생성
+	// projectile
 	PMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("PMovementComp"));
-	// 발사체 컴포넌트를 Update 시킬 대상(컴포넌트) 지정
 	PMovementComp->SetUpdatedComponent(SphereCollComp);
-	// 초기속도
+	
+	// InitSpeed
 	PMovementComp->InitialSpeed = 3000.f;
-	// 최대속도
+	// MaxSpeed
 	PMovementComp->MaxSpeed = 5000.f;
-	// 반동
+	// Bounce
 	PMovementComp->bShouldBounce = true;
-	// 반동크기
+	// Bounciness
 	PMovementComp->Bounciness = 0.3f;
+	// gravity
+	PMovementComp->ProjectileGravityScale = 0.1f;
 }
 
 // Called when the game starts or when spawned
 void ALYM_PBullet::BeginPlay()
 {
 	Super::BeginPlay();
+	// death timer
 	FTimerHandle deathTimer;
-
-	GetWorld()->GetTimerManager().SetTimer(deathTimer,FTimerDelegate::CreateLambda([this]()->void{Destroy();}),2.0f,false);
+	GetWorld()->GetTimerManager().SetTimer(deathTimer, FTimerDelegate::CreateLambda([this]()->void { Destroy(); }), 2.0f, false);
 	
 	
 }
@@ -51,5 +58,19 @@ void ALYM_PBullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+// hit overlap
+void ALYM_PBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor && OtherActor != this && OtherComp)
+	{
+		auto player = Cast<ALYM_TestPlayer>(OtherActor);
+		if (player)
+		{
+			return;
+		}
+		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
+	}
+	Destroy();
 }
 
