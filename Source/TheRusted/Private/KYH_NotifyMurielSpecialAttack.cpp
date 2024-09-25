@@ -10,7 +10,7 @@ void UKYH_NotifyMurielSpecialAttack::NotifyBegin(USkeletalMeshComponent* MeshCom
 	APlayer_Muriel* player = Cast<APlayer_Muriel>(MeshComp->GetOwner());
 	if (player)
 	{
-		player->SpawnBullet();
+		player->Attack();
 	}
 }
 

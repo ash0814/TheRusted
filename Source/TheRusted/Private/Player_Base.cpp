@@ -76,8 +76,8 @@ void APlayer_Base::Move(const FInputActionValue& Value)
 		UE_LOG(LogTemp, Warning, TEXT("Move"));
 		const FVector _CurrentValue = Value.Get<FVector>();
 		if (Controller) {
-			MoveDirection.X = _CurrentValue.Y;
-			MoveDirection.Y = _CurrentValue.X;
+			MoveDirection.X = _CurrentValue.X;
+			MoveDirection.Y = _CurrentValue.Y;
 		}
 
 		MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
@@ -167,6 +167,6 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRang
 	{
 		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition,EndLocation);
 	}
-	AttackTransform = UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
-	return AttackTransform;
+	return UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+
 }

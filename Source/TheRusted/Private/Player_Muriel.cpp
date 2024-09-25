@@ -28,19 +28,31 @@ void APlayer_Muriel::BeginPlay()
 
 void APlayer_Muriel::Attack_Primary()
 {
-	magazine = magazines[0];
-	MontagePlay(AM_Attack_Primary);
+	if (bCanAttack) {
+		//bCanAttack = false;
+		magazine = magazines[0];
+		MontagePlay(AM_Attack_Primary);
+	}
 }
 
 void APlayer_Muriel::Attack_Strong()
 {
-	magazine = magazines[1];
-	MontagePlay(AM_Attack_Strong);
+	if (bCanAttack) {
+		bCanAttack = false;
+		bCanMove = false;
+		magazine = magazines[1];
+		MontagePlay(AM_Attack_Strong);
+	}
 }
 
 void APlayer_Muriel::Attack_Ultimate()
 {
-	MontagePlay(AM_Attack_Ultimate);
+	//MontagePlay(AM_Attack_Ultimate);
+	if (bCanAttack) {
+		bCanAttack = false;
+		bCanMove = false;
+		MontagePlay(AM_Attack_Ultimate);
+	}
 }
 
 void APlayer_Muriel::Attack()
@@ -49,41 +61,42 @@ void APlayer_Muriel::Attack()
 	DrawDebugDirectionalArrow(GetWorld(), FireTransform.GetLocation(), FireTransform.GetLocation() + FireTransform.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 	
 	GetWorld()->SpawnActor<AProjectile_Base>(magazine, FireTransform);
-	if(bCanAttack)
+
+	/*if(bCanAttack)
 	{
-		MontagePlay(AttackAnimMontage);
+		MontagePlay(AM_Attack_Primary);
 		magazine = magazines[0];
-	}
+	}*/
 }
 
-void APlayer_Muriel::StrongAttack()
-{
-	if(bCanAttack)
-	{
-		bCanMove = false;
-		bCanAttack = false;
-		MontagePlay(StrongAttackAnimMontage);
-		magazine = magazines[1];
-	}
-}
-
-void APlayer_Muriel::Ultimate()
-{
-	if(bCanAttack)
-	{
-		bCanMove = false;
-		bCanAttack = false;
-		MontagePlay(UltimateAnimMontage);
-	}
-}
-
-void APlayer_Muriel::SpawnBullet()
-{
-	FTransform _firePosition = Calc_AttackTransform(FName("WeaponAttachPointR"));
-	GetWorld()->SpawnActor<ABullet_Muriel>(magazine, _firePosition);
-
-	DrawDebugDirectionalArrow(GetWorld(), _firePosition.GetLocation(), _firePosition.GetLocation() + _firePosition.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
-}
+//void APlayer_Muriel::StrongAttack()
+//{
+//	if(bCanAttack)
+//	{
+//		bCanMove = false;
+//		bCanAttack = false;
+//		MontagePlay(StrongAttackAnimMontage);
+//		magazine = magazines[1];
+//	}
+//}
+//
+//void APlayer_Muriel::Ultimate()
+//{
+//	if(bCanAttack)
+//	{
+//		bCanMove = false;
+//		bCanAttack = false;
+//		MontagePlay(UltimateAnimMontage);
+//	}
+//}
+//
+//void APlayer_Muriel::SpawnBullet()
+//{
+//	FTransform _firePosition = Calc_AttackTransform(FName("WeaponAttachPointR"));
+//	GetWorld()->SpawnActor<ABullet_Muriel>(magazine, _firePosition);
+//
+//	DrawDebugDirectionalArrow(GetWorld(), _firePosition.GetLocation(), _firePosition.GetLocation() + _firePosition.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
+//}
 
 void APlayer_Muriel::ApplyDamage(float amount)
 {
