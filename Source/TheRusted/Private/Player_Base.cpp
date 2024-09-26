@@ -49,6 +49,10 @@ void APlayer_Base::BeginPlay()
 	FTimerHandle TraceTimerHandle;
 	GetWorldTimerManager().SetTimer(TraceTimerHandle, this, &APlayer_Base::PerformInteractionTrace, 0.2f, true);
 
+	CurrentCoin = 1000;
+	QuickSlot.Add(EItemType::Heath, 0);
+	QuickSlot.Add(EItemType::Energy, 0);
+	QuickSlot.Add(EItemType::Shield, 0);
 }
 
 // Called every frame
@@ -222,5 +226,26 @@ void APlayer_Base::PerformInteractionTrace()
 			}
 			CachedInteractableActor = nullptr;
 		}
+	}
+}
+
+int32 APlayer_Base::GetCoin() const
+{
+	return CurrentCoin;
+}
+
+void APlayer_Base::UpdateCoin(int32 value)
+{
+	CurrentCoin += value;
+}
+
+void APlayer_Base::AddItemToQuickSlot(EItemType ItemType)
+{
+	if (QuickSlot.Contains(ItemType)) {
+		QuickSlot[ItemType]++;
+	}
+	else {
+		// Error
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("QuickSlot Error"));
 	}
 }
