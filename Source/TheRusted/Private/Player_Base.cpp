@@ -50,9 +50,9 @@ void APlayer_Base::BeginPlay()
 	GetWorldTimerManager().SetTimer(TraceTimerHandle, this, &APlayer_Base::PerformInteractionTrace, 0.2f, true);
 
 	CurrentCoin = 1000;
-	QuickSlot.Add(EItemType::Heath, 0);
-	QuickSlot.Add(EItemType::Energy, 0);
-	QuickSlot.Add(EItemType::Shield, 0);
+	QuickSlot.Add(0);
+	QuickSlot.Add(0);
+	QuickSlot.Add(0);
 }
 
 // Called every frame
@@ -239,13 +239,17 @@ void APlayer_Base::UpdateCoin(int32 value)
 	CurrentCoin += value;
 }
 
+bool APlayer_Base::CheckCanBuy(int32 value)
+{
+	return (CurrentCoin >= value);
+}
+
 void APlayer_Base::AddItemToQuickSlot(EItemType ItemType)
 {
-	if (QuickSlot.Contains(ItemType)) {
-		QuickSlot[ItemType]++;
-	}
-	else {
-		// Error
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("QuickSlot Error"));
-	}
+	if (ItemType == EItemType::Heath)
+		QuickSlot[0]++;
+	else if (ItemType == EItemType::Energy)
+		QuickSlot[1]++;
+	else if (ItemType == EItemType::Shield)
+		QuickSlot[2]++;
 }

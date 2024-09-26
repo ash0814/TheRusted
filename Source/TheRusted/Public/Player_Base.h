@@ -133,9 +133,15 @@ public:
 	int32 GetCoin() const;
 	UFUNCTION(BlueprintCallable)
 	void UpdateCoin(int32 value);
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckCanBuy(int32 value);
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
+	UDataTable* ItemDataTable;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "QuickSlot")
-	TMap<EItemType, int32> QuickSlot;
+	TArray<int32> QuickSlot;
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemToQuickSlot(EItemType ItemType);
