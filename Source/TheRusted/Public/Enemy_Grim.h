@@ -20,5 +20,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	virtual void Attack_Primary() override;
+	virtual void Attack_Strong() override;
+	virtual void Attack_Ultimate() override;	
+	virtual void Attack() override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	TSubclassOf<class AProjectile_Base> SelectedProjectile;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	TArray<TSubclassOf<class AProjectile_Base>> Projectiles;
 
 };
