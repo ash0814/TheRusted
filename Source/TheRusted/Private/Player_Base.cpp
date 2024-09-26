@@ -78,16 +78,19 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void APlayer_Base::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move"));
-	const FVector _CurrentValue = Value.Get<FVector>();
-	if (Controller) {
-		MoveDirection.X = _CurrentValue.X;
-		MoveDirection.Y = _CurrentValue.Y;
-	}
+	if(bCanMove)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Move"));
+		const FVector _CurrentValue = Value.Get<FVector>();
+		if (Controller) {
+			MoveDirection.X = _CurrentValue.X;
+			MoveDirection.Y = _CurrentValue.Y;
+		}
 
-	MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
-	AddMovementInput(MoveDirection);
-	MoveDirection = FVector::ZeroVector;
+		MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
+		AddMovementInput(MoveDirection);
+		MoveDirection = FVector::ZeroVector;
+	}	
 }
 
 void APlayer_Base::LookUp(const FInputActionValue& Value)

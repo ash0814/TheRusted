@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Enemy_Base.h"
+#include "Player_Base.h"
 #include "Enemy_Grim.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THERUSTED_API AEnemy_Grim : public AEnemy_Base
+class THERUSTED_API AEnemy_Grim : public APlayer_Base
 {
 	GENERATED_BODY()
 public:
