@@ -28,9 +28,6 @@ APlayer_Base::APlayer_Base()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 	CameraComp->bUsePawnControlRotation = false;
-
-	bCanMove = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -76,18 +73,95 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	}
 }
 
+void APlayer_Base::SetPlayerMovementState(EPlayerMovementState NewMovementState)
+{
+	if(PlayerMovementState == NewMovementState) return;
+
+	PlayerMovementState = NewMovementState;
+	HandleMovementState();
+}
+
+void APlayer_Base::SetPlayerActionState(EPlayerActionState NewActionState)
+{
+	PlayerActionState = NewActionState;
+	HandleActionState();
+}
+
+void APlayer_Base::HandleMovementState()
+{
+	switch (PlayerMovementState)
+	{
+	case EPlayerMovementState::Idle:
+		// 캐릭터가 Idle 상태일 때 처리할 로직
+			break;
+	case EPlayerMovementState::Moving:
+		// 캐릭터가 걷는 중일 때 처리할 로직
+			break;
+	case EPlayerMovementState::Jumping:
+		// 점프 중일 때 처리할 로직
+			Jump();
+		break;
+	case EPlayerMovementState::Dashing:
+		// 대쉬 중일 때 처리할 로직
+			break;
+	case EPlayerMovementState::Falling:
+		// 낙하 중일 때 처리할 로직
+			break;
+	case EPlayerMovementState::Stopped:
+		// 캐릭터가 움직일 수 없을 때 처리할 로직
+			break;
+	}
+}
+
+void APlayer_Base::HandleActionState()
+{
+	switch (PlayerActionState)
+	{
+	case EPlayerActionState::None:
+		// 기본 상태로 아무 행동도 하지 않을 때
+			break;
+	case EPlayerActionState::Attack_Primary:
+		// 기본 공격 중일 때 로직
+			Attack_Primary();
+		break;
+	case EPlayerActionState::Attack_Strong:
+		// 특수 공격 중일 때 로직
+			Attack_Strong();
+		break;
+	case EPlayerActionState::Charging_Ultimate:
+		//  궁극기 차징 중일 때 로직
+			Charge_Ultimate();
+			break;
+	case EPlayerActionState::Attack_Ultimate:
+		// 궁극기 공격 중일 때 로직
+			Attack_Ultimate();
+			break;
+	case EPlayerActionState::Dead:
+		// 캐릭터가 죽었을 때 로직
+			break;
+	}
+}
+
 void APlayer_Base::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move"));
-	const FVector _CurrentValue = Value.Get<FVector>();
-	if (Controller) {
-		MoveDirection.X = _CurrentValue.X;
-		MoveDirection.Y = _CurrentValue.Y;
-	}
+	if(PlayerMovementState == EPlayerMovementState::Idle || PlayerMovementState == EPlayerMovementState::Moving)
+	{
+		SetPlayerMovementState(EPlayerMovementState::Moving);
+		const FVector _CurrentValue = Value.Get<FVector>();
+		if(_CurrentValue == FVector::ZeroVector)
+		{
+			SetPlayerMovementState(EPlayerMovementState::Idle);
+			return;
+		}
+		if (Controller) {
+			MoveDirection.X = _CurrentValue.X;
+			MoveDirection.Y = _CurrentValue.Y;
+		}
 
-	MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
-	AddMovementInput(MoveDirection);
-	MoveDirection = FVector::ZeroVector;
+		MoveDirection = FTransform(GetControlRotation()).TransformVector(MoveDirection);
+		AddMovementInput(MoveDirection);
+		MoveDirection = FVector::ZeroVector;
+	}
 }
 
 void APlayer_Base::LookUp(const FInputActionValue& Value)
@@ -108,7 +182,7 @@ void APlayer_Base::Turn(const FInputActionValue& Value)
 
 void APlayer_Base::InputJump(const FInputActionValue& Value)
 {
-	Jump();
+	SetPlayerMovementState(EPlayerMovementState::Jumping);
 }
 
 void APlayer_Base::InputInteract(const FInputActionValue& Value)
@@ -117,6 +191,7 @@ void APlayer_Base::InputInteract(const FInputActionValue& Value)
 		if (CachedInteractableActor) {
 			IInteractableInterface* InteractableActor = Cast<IInteractableInterface>(CachedInteractableActor);
 			if (InteractableActor) {
+				SetPlayerMovementState(EPlayerMovementState::Stopped);
 				InteractableActor->Interact();
 			}
 		}
@@ -125,22 +200,54 @@ void APlayer_Base::InputInteract(const FInputActionValue& Value)
 
 void APlayer_Base::Input_Attack_Primary(const FInputActionValue& Value)
 {
-	Attack_Primary();
+	if(PlayerActionState == EPlayerActionState::Charging_Ultimate)
+	{
+		SetPlayerActionState(EPlayerActionState::Attack_Ultimate);
+		return;
+	}
+	if (PlayerActionState == EPlayerActionState::None || PlayerActionState == EPlayerActionState::Attack_Primary)
+	{
+		if(PlayerMovementState != EPlayerMovementState::Stopped && PlayerMovementState != EPlayerMovementState::Dashing)
+		{
+			SetPlayerActionState(EPlayerActionState::Attack_Primary);
+		}
+	}
 }
 
 void APlayer_Base::Input_Attack_Strong(const FInputActionValue& Value)
 {
-	Attack_Strong();
+	if(PlayerActionState == EPlayerActionState::Charging_Ultimate)
+	{
+		SetPlayerActionState(EPlayerActionState::None);
+		SetPlayerMovementState(EPlayerMovementState::Idle);
+		Cancle_Ultimate();
+		return;
+	}
+	if(PlayerActionState == EPlayerActionState::None)
+	{
+		if(PlayerMovementState != EPlayerMovementState::Stopped && PlayerMovementState != EPlayerMovementState::Dashing)
+		{
+			SetPlayerActionState(EPlayerActionState::Attack_Strong);
+			SetPlayerMovementState(EPlayerMovementState::Stopped);
+		}
+	}
 }
 
 void APlayer_Base::Input_Attack_Ultimate(const FInputActionValue& Value)
 {
-	Attack_Ultimate();
+	if(PlayerActionState == EPlayerActionState::None)
+	{
+		if(PlayerMovementState != EPlayerMovementState::Stopped && PlayerMovementState != EPlayerMovementState::Dashing)
+		{
+			SetPlayerActionState(EPlayerActionState::Charging_Ultimate);
+			SetPlayerMovementState(EPlayerMovementState::Stopped);
+		}
+	}
 }
 
 void APlayer_Base::Attack_Primary()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Attack"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Attack"));
 }
 
 void APlayer_Base::Attack_Strong()
@@ -148,18 +255,29 @@ void APlayer_Base::Attack_Strong()
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Strong Attack"));
 }
 
+void APlayer_Base::Charge_Ultimate()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Chargeing Ultimate"));
+}
+
+void APlayer_Base::Cancle_Ultimate()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Ultimate Cancled"));
+}
+
 void APlayer_Base::Attack_Ultimate()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Ultimate"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Attack Ultimate"));
 }
 
 void APlayer_Base::Attack()
 {
-
+	
 }
 
 float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	SetPlayerMovementState(EPlayerMovementState::Stopped);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	return 0.0f;
 }
@@ -167,21 +285,23 @@ float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEve
 FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRange)
 {
 	FHitResult Hit;
-	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector StartLocation = GetMesh()->GetSocketLocation(socketName);
 	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
-
-	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
-	FVector AttackPosition = GetMesh()->GetSocketLocation(socketName);
+	//StartLocation
 	FRotator LookAtRotator;
+	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, 5.f, 0, 2.f);
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
 	if (result)
 	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition, Hit.ImpactPoint);
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, Hit.ImpactPoint);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
 	}
 	else
 	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(AttackPosition, EndLocation);
+		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
 	}
-	return UKismetMathLibrary::MakeTransform(AttackPosition, LookAtRotator);
+	return UKismetMathLibrary::MakeTransform(StartLocation, LookAtRotator);
 }
 
 void APlayer_Base::PerformInteractionTrace()

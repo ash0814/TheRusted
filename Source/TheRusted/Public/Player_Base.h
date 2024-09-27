@@ -11,6 +11,28 @@
 class UInputMappingContext;
 class UInputAction;
 
+UENUM(BlueprintType)
+enum class EPlayerMovementState : uint8
+{
+	Idle UMETA(DisplayName = "Idle"),
+	Moving UMETA(DisplayName = "Moving"),
+	Jumping UMETA(DisplayName = "Jumping"),
+	Dashing UMETA(DisplayName = "Dashing"),
+	Falling UMETA(DisplayName = "Falling"),
+	Stopped UMETA(DisplayName = "Stopped")
+};
+
+UENUM(BlueprintType)
+enum class EPlayerActionState : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Attack_Primary UMETA(DiplayName = "Attack_Primary"),
+	Attack_Strong UMETA(DisplayName = "Attack_Strong"),
+	Charging_Ultimate UMETA(DisplayName = "Charging_Ultimate"),
+	Attack_Ultimate UMETA(DisplayName = "Attack_Ultimate"),
+	Dead UMETA(DisplayName = "Dead")
+};
+
 UCLASS()
 class THERUSTED_API APlayer_Base : public ACharacter_Base
 {
@@ -34,44 +56,43 @@ public:
 	// Camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class UCameraComponent* CameraComp;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class USpringArmComponent* SpringArmComp;
 
 	// Input
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputMappingContext* PlayerMappingContext;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* IA_Move;
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_LookUp;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	bool bLookUpInvert = true;
-
+	bool bLookUpInvert = false;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Turn;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Jump;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Attack_Primary;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Attack_Strong;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Attack_Ultimate;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Interact;
 
-	bool bCanMove = true;
-	bool bCanAttack = true;
+	EPlayerMovementState PlayerMovementState;
+	EPlayerActionState PlayerActionState;
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetPlayerMovementState(EPlayerMovementState NewMovementState);
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetPlayerActionState(EPlayerActionState NewActionState);
+
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void HandleMovementState();
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void HandleActionState();
 
 	void Move(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
@@ -87,28 +108,27 @@ public:
 	// Animation
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_LevelStart;
-
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Primary;
-
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Strong;
-
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_Charge_Ultimate;
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Ultimate;
-
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Hit;
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack_Primary();
-
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack_Strong();
-
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Charge_Ultimate();
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Cancle_Ultimate();
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack_Ultimate();
-
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	virtual void Attack();
 
@@ -118,7 +138,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	FBasicStatus BasicStatus;
 
-	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 20000);
+	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 10000.f);
 
 private:
 	AActor* CachedInteractableActor;
