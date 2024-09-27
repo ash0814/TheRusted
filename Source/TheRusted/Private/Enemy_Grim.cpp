@@ -59,7 +59,20 @@ void AEnemy_Grim::Attack_Ultimate()
 
 void AEnemy_Grim::Attack()
 {
-	FTransform FireTransform = Calc_AttackTransform(FName("WeaponAttachPointR"));
+	FTransform FireTransform;
+	if(SelectedProjectile == Projectiles[0])
+	{
+		FireTransform = Calc_AttackTransform(FName("Muzzle_01"));
+	}
+	else if(SelectedProjectile == Projectiles[1])
+	{
+		FireTransform = Calc_AttackTransform(FName("FX_Ult_Charge"));
+	}
+	else if(SelectedProjectile == Projectiles[2])
+	{
+		FireTransform = Calc_AttackTransform(FName("FX_Ult_Charge"));
+	}
+	
 	DrawDebugDirectionalArrow(GetWorld(), FireTransform.GetLocation(), FireTransform.GetLocation() + FireTransform.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 	
 	GetWorld()->SpawnActor<AProjectile_Base>(SelectedProjectile, FireTransform);
