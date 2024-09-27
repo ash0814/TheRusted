@@ -22,7 +22,8 @@ AProjectile_Base::AProjectile_Base()
 	ProjectileMovementComp->InitialSpeed = 3000;
 	ProjectileMovementComp->MaxSpeed = 3000;
 	ProjectileMovementComp->bShouldBounce = true;
-	ProjectileMovementComp->Bounciness = 0.3f;	
+	ProjectileMovementComp->Bounciness = 0.3f;
+	ProjectileMovementComp->ProjectileGravityScale = 0;
 }
 
 // Called when the game starts or when spawned
