@@ -40,4 +40,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage(float amount);
 	
+
 };

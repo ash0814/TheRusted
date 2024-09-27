@@ -76,5 +76,15 @@ void AStore::Interact()
 	OurPlayerController->SetShowMouseCursor(true);
 
 	HideInteractionWidget();
+
+	if (ItemShopWidgetClass != nullptr)
+	{
+		ItemShopWidget = CreateWidget<UUserWidget>(GetWorld(), ItemShopWidgetClass);
+		if (ItemShopWidget)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ItemShopWidget Created"));
+			ItemShopWidget->AddToViewport();
+		}
+	}
 }
 
