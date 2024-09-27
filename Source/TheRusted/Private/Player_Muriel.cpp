@@ -42,6 +42,7 @@ void APlayer_Muriel::Attack_Strong()
 		bCanMove = false;
 		magazine = magazines[1];
 		MontagePlay(AM_Attack_Strong);
+		BasicStatus.AddEP(-10.f);
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "Character_Base.h"
 #include "InputActionValue.h"
 #include "CharacterStatus.h"
+#include "ItemData.h"
 #include "Player_Base.generated.h"
 
 class UInputMappingContext;
@@ -70,6 +71,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Interact;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* IA_QuickSlot;
+
 	bool bCanMove = true;
 	bool bCanAttack = true;
 
@@ -81,6 +85,7 @@ public:
 	void Input_Attack_Strong(const FInputActionValue& Value);
 	void Input_Attack_Ultimate(const FInputActionValue& Value);
 	void InputInteract(const FInputActionValue& Value);
+	void InputQuickSlot(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
@@ -123,4 +128,34 @@ public:
 private:
 	AActor* CachedInteractableActor;
 	void PerformInteractionTrace();
+
+private:
+		int32 CurrentCoin = 0;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	int32 GetCoin() const;
+	UFUNCTION(BlueprintCallable)
+	void UpdateCoin(int32 value);
+
+	UFUNCTION(BlueprintCallable)
+	bool CheckCanBuy(int32 value);
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inventory")
+	UDataTable* ItemDataTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "QuickSlot")
+	TArray<int32> QuickSlot;
+
+	UFUNCTION(BlueprintCallable)
+	void AddItemToQuickSlot(EItemType ItemType);
+
+	UFUNCTION(BlueprintCallable)
+	void UseHPItem();
+
+	UFUNCTION(BlueprintCallable)
+	void UseEPItem();
+
+	UFUNCTION(BlueprintCallable)
+	void UseSPItem();
 };
