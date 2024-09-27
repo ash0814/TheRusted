@@ -21,8 +21,15 @@ protected:
 public:
 	virtual void Attack_Primary() override;
 	virtual void Attack_Strong() override;
-	virtual void Attack_Ultimate() override;	
+	virtual void Charge_Ultimate() override;
+	virtual void Cancle_Ultimate() override;
+	virtual void Attack_Ultimate() override;
 	virtual void Attack() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+	FVector UltAttackLocation = FVector::ZeroVector;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+	float UltMaxRange = 4000.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack")
 	TSubclassOf<class AProjectile_Base> magazine;
@@ -33,4 +40,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage(float amount);
 	
+
 };
