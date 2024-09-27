@@ -10,7 +10,7 @@ void UANS_CantMove::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 	if (APlayer_Base* Player = Cast<APlayer_Base>(MeshComp->GetOwner()))
 	{
-		Player->bCanMove = false;
+		//Player->bCanMove = false;
 	}
 	
 }
@@ -20,6 +20,6 @@ void UANS_CantMove::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBas
 	Super::NotifyEnd(MeshComp, Animation);
 	if (APlayer_Base* Player = Cast<APlayer_Base>(MeshComp->GetOwner()))
 	{
-		Player->bCanMove = true;
+		//Player->bCanMove = true;
 	}
 }

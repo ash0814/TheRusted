@@ -30,26 +30,26 @@ void AEnemy_Grim::BeginPlay()
 
 void AEnemy_Grim::Attack_Primary()
 {
-	if (bCanAttack) {
+	//if (bCanAttack) {
 		SelectedProjectile = Projectiles[0];
 		MontagePlay(AM_Attack_Primary);
-	}
+	//}
 }
 
 void AEnemy_Grim::Attack_Strong()
 {
-	if (bCanAttack) {
+	//if (bCanAttack) {
 		SelectedProjectile = Projectiles[1];
 		MontagePlay(AM_Attack_Strong);
-	}
+	//}
 }
 
 void AEnemy_Grim::Attack_Ultimate()
 {
-	if (bCanAttack) {
+	//if (bCanAttack) {
 		SelectedProjectile = Projectiles[2];
 		MontagePlay(AM_Attack_Ultimate);
-	}
+	//}
 }
 
 void AEnemy_Grim::Attack()
@@ -75,7 +75,6 @@ void AEnemy_Grim::Attack()
 
 float AEnemy_Grim::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-
 	MontagePlay(AM_Hit);
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

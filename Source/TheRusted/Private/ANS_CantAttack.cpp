@@ -10,7 +10,7 @@ void UANS_CantAttack::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenc
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 	if (APlayer_Base* Player = Cast<APlayer_Base>(MeshComp->GetOwner()))
 	{
-		Player->bCanAttack = false;
+		//Player->bCanAttack = false;
 	}
 }
 
@@ -19,6 +19,6 @@ void UANS_CantAttack::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 	Super::NotifyEnd(MeshComp, Animation);
 	if (APlayer_Base* Player = Cast<APlayer_Base>(MeshComp->GetOwner()))
 	{
-		Player->bCanAttack = true;
+	//	Player->bCanAttack = true;
 	}
 }
