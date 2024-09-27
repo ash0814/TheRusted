@@ -23,7 +23,7 @@ void AProjectile_Muriel_Primary::BeginPlay()
 void AProjectile_Muriel_Primary::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-
+	
 	if(!bHit)
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_NoHit, GetActorLocation(), GetActorRotation());
