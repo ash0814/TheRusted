@@ -77,6 +77,7 @@ void APlayer_Base::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInputComponent->BindAction(IA_Attack_Strong, ETriggerEvent::Started, this, &APlayer_Base::Input_Attack_Strong);
 		EnhancedInputComponent->BindAction(IA_Attack_Ultimate, ETriggerEvent::Triggered, this, &APlayer_Base::Input_Attack_Ultimate);
 		EnhancedInputComponent->BindAction(IA_Interact, ETriggerEvent::Started, this, &APlayer_Base::InputInteract);
+		EnhancedInputComponent->BindAction(IA_QuickSlot, ETriggerEvent::Started, this, &APlayer_Base::InputQuickSlot);
 	}
 }
 
@@ -124,6 +125,34 @@ void APlayer_Base::InputInteract(const FInputActionValue& Value)
 				InteractableActor->Interact();
 			}
 		}
+	}
+}
+
+void APlayer_Base::InputQuickSlot(const FInputActionValue& Value)
+{
+	int32 _Index = Value.Get<float>();
+	switch (_Index)
+	{
+		case 1:
+			if (QuickSlot[0] > 0) {
+				QuickSlot[0]--;
+				UseHPItem();
+			}
+			break;
+		case 2:
+			if (QuickSlot[1] > 0) {
+				QuickSlot[1]--;
+				UseEPItem();
+			}
+			break;
+		case 3:
+			if (QuickSlot[2] > 0) {
+				QuickSlot[2]--;
+				UseSPItem();
+			}
+			break;
+		default:
+			break;
 	}
 }
 
@@ -252,4 +281,19 @@ void APlayer_Base::AddItemToQuickSlot(EItemType ItemType)
 		QuickSlot[1]++;
 	else if (ItemType == EItemType::Shield)
 		QuickSlot[2]++;
+}
+
+void APlayer_Base::UseHPItem()
+{
+	BasicStatus.AddHP(100);
+}
+
+void APlayer_Base::UseEPItem()
+{
+	BasicStatus.AddEP(100);
+}
+
+void APlayer_Base::UseSPItem()
+{
+	BasicStatus.AddSP(1);
 }

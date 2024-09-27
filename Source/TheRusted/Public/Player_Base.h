@@ -71,6 +71,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Interact;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	class UInputAction* IA_QuickSlot;
+
 	bool bCanMove = true;
 	bool bCanAttack = true;
 
@@ -82,6 +85,7 @@ public:
 	void Input_Attack_Strong(const FInputActionValue& Value);
 	void Input_Attack_Ultimate(const FInputActionValue& Value);
 	void InputInteract(const FInputActionValue& Value);
+	void InputQuickSlot(const FInputActionValue& Value);
 
 	FVector MoveDirection;
 
@@ -145,4 +149,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemToQuickSlot(EItemType ItemType);
+
+	UFUNCTION(BlueprintCallable)
+	void UseHPItem();
+
+	UFUNCTION(BlueprintCallable)
+	void UseEPItem();
+
+	UFUNCTION(BlueprintCallable)
+	void UseSPItem();
 };
