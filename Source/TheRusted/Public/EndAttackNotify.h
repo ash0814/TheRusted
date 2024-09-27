@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Player_Base.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "EndAttackNotify.generated.h"
 
@@ -16,4 +17,9 @@ class THERUSTED_API UEndAttackNotify : public UAnimNotify
 	
 public:
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	EPlayerMovementState NewMovementState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	EPlayerActionState NewActionState;
 };
