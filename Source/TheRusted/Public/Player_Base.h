@@ -82,13 +82,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	class UInputAction* IA_Interact;
 
-	EPlayerMovementState PlayerMovementState;
-	EPlayerActionState PlayerActionState;
+	EPlayerMovementState PlayerMovementState = EPlayerMovementState::Idle;
+	EPlayerActionState PlayerActionState = EPlayerActionState::None;
+	ECombatState PlayerCombatState = ECombatState::None;
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void SetPlayerMovementState(EPlayerMovementState NewMovementState);
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void SetPlayerActionState(EPlayerActionState NewActionState);
+	UFUNCTION(BlueprintCallable, Category = "Input")
+	void SetCombatState(ECombatState NewCombatState);
 
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void HandleMovementState();
@@ -98,8 +101,8 @@ public:
 	class UInputAction* IA_QuickSlot;
 
 	void Move(const FInputActionValue& Value);
-	void LookUp(const FInputActionValue& Value);
-	void Turn(const FInputActionValue& Value);
+	virtual void LookUp(const FInputActionValue& Value);
+	virtual void Turn(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
 	void Input_Attack_Primary(const FInputActionValue& Value);
 	void Input_Attack_Strong(const FInputActionValue& Value);
@@ -110,17 +113,17 @@ public:
 	FVector MoveDirection;
 
 	// Animation
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	class UAnimMontage* AM_LevelStart;
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	class UAnimMontage* AM_Attack_Primary;
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	class UAnimMontage* AM_Attack_Strong;
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	class UAnimMontage* AM_Charge_Ultimate;
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	class UAnimMontage* AM_Attack_Ultimate;
-	UPROPERTY(EditAnywhere, Category = Animation)
+	UPROPERTY(EditAnywhere, Category = "Animation")
 	class UAnimMontage* AM_Hit;
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")

@@ -5,7 +5,9 @@
 #include "Projectile_Base.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 APlayer_Muriel::APlayer_Muriel()
@@ -13,52 +15,49 @@ APlayer_Muriel::APlayer_Muriel()
 	GetCapsuleComponent()->SetCapsuleHalfHeight(100.0f);
 	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonMuriel/Characters/Heroes/Muriel/Meshes/Muriel_GDC.Muriel_GDC'"));
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -100.0f), FRotator(0.0f, -90.0f, 0.0f));
+
+	UltPreviewParticleComp = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Ult Preview Particle"));
 }
 
 void APlayer_Muriel::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (magazines.Num() > 0) {
+	if (magazines.Num())
+	{
 		magazine = magazines[0];
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Muriel Magazine is Empty"));
 	}
-
+	
 	SetPlayerMovementState(EPlayerMovementState::Stopped);
 	MontagePlay(AM_LevelStart);
-}
-
-void APlayer_Muriel::UltimateAction(float DeltaTime)
-{
-	if(PlayerActionState == EPlayerActionState::Attack_Ultimate)
-	{
-		GetMovementComponent()->Velocity = FVector(0.0f, 0.0f, 0.0f);
-		UltTimer += DeltaTime;
-		if(UltTimer < 1.55f)
-		{
-			SetActorLocation(FMath::Lerp(UltFirstLocation, UltFallingLocation, UltTimer / 1.55f), true);
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("UltFirstLocation : %s"), *UltFirstLocation.ToString()));
-		}
-		else if (UltTimer < 3.0f)
-		{
-			SetActorLocation(FMath::Lerp(UltFallingLocation, UltAttackLocation, UltTimer / 3.0f), true);
-		}
-		else
-		{
-			if(PlayerActionState == EPlayerActionState::None)
-			{
-				UltTimer = 0.0f;
-			}
-		}
-	}
 }
 
 void APlayer_Muriel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UltimateAction(DeltaTime);
+
+	if(PlayerActionState == EPlayerActionState::Charging_Ultimate)
+	{
+		if(UltPreviewParticleComp)
+		{
+			UltPreviewParticleComp->SetWorldLocation(GetUltTargetLocation());
+		}
+	}
+}
+
+void APlayer_Muriel::LookUp(const FInputActionValue& Value)
+{
+	if(MurielUltState != EMurielUltState::None) return;
+	Super::LookUp(Value);
+}
+
+void APlayer_Muriel::Turn(const FInputActionValue& Value)
+{
+	if(MurielUltState != EMurielUltState::None) return;
+	Super::Turn(Value);
 }
 
 void APlayer_Muriel::Attack_Primary()
@@ -77,10 +76,16 @@ void APlayer_Muriel::Attack_Strong()
 void APlayer_Muriel::Charge_Ultimate()
 {
 	MontagePlay(AM_Charge_Ultimate);
+	if(UltPreviewParticle)
+	{
+		UltPreviewParticleComp->SetTemplate(UltPreviewParticle);
+		UltPreviewParticleComp->SetWorldLocation(GetUltTargetLocation());
+	}
 }
 
 void APlayer_Muriel::Cancle_Ultimate()
 {
+	UltPreviewParticleComp->SetActive(false);
 	if(AnimInstance->Montage_IsPlaying(AM_Charge_Ultimate))
 	{
 		StopAnimMontage(AM_Charge_Ultimate);
@@ -89,11 +94,11 @@ void APlayer_Muriel::Cancle_Ultimate()
 
 void APlayer_Muriel::Attack_Ultimate()
 {
+	SetCombatState(ECombatState::Invincible);
+	UltPreviewParticleComp->SetActive(false);
 	UltAttackLocation = GetUltTargetLocation();
-	UltFallingLocation = GetActorUpVector() * 1000.f;
-	UltFirstLocation = GetActorLocation();
+	UltMovementForce = (UltAttackLocation - GetActorLocation()).Length();
 	MontagePlay(AM_Attack_Ultimate);
-	
 }
 
 void APlayer_Muriel::Attack()
@@ -106,11 +111,34 @@ void APlayer_Muriel::Attack()
 
 }
 
+void APlayer_Muriel::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+	if(PlayerMovementState != EPlayerMovementState::Stopped)
+	{
+		PlayerMovementState = EPlayerMovementState::Idle;
+	}
+	
+	if(MurielUltState == EMurielUltState::Descending)
+	{
+		SetCombatState(ECombatState::None);
+		if(AM_Ult_Land)
+		{
+			PlayAnimMontage(AM_Ult_Land);
+		}
+		if(UltEffect)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Landed"));
+			GetWorld()->SpawnActor<AActor>(UltEffect, Hit.ImpactPoint + GetActorForwardVector() * 300.f, FRotator::ZeroRotator);
+		}
+	}
+}
+
 FVector APlayer_Muriel::GetUltTargetLocation()
 {
 	// Ultimate 낙하지점 계산
 	FVector UltStartLocation = CameraComp->GetComponentLocation();
-	FVector UltEndLocation;
+	FVector UltEndLocation = UltStartLocation + GetActorForwardVector() * UltMaxRange;
 	FHitResult UltHit;
 	bool bIsVaildRange = GetWorld()->LineTraceSingleByChannel(UltHit, UltStartLocation, UltStartLocation + CameraComp->GetForwardVector() * UltMaxRange, ECC_Visibility);
 	if(bIsVaildRange)
@@ -120,13 +148,47 @@ FVector APlayer_Muriel::GetUltTargetLocation()
 	}
 	else
 	{
-		UltEndLocation = UltStartLocation + GetActorForwardVector() * UltMaxRange;
+		bIsVaildRange = GetWorld()->LineTraceSingleByChannel(UltHit, UltEndLocation, UltEndLocation - FVector::UpVector * UltMaxRange, ECC_Visibility);
+		if(bIsVaildRange)
+		{
+			UltEndLocation = UltHit.ImpactPoint;
+		}
 	}
+	//
+	//+
 	//DrawDebugLine(GetWorld(), UltEndLocation, FVector(UltEndLocation.X, UltEndLocation.Y, UltEndLocation.Z + 1000.f), FColor::Red, true, 0.2f, 0, 50.f);
 	return UltEndLocation;
 }
 
+void APlayer_Muriel::SetMurielUltState(EMurielUltState NewMurielUltState)
+{
+	if(MurielUltState == NewMurielUltState) return;
+	
+	MurielUltState = NewMurielUltState;
+	HandleMurielUltState();
+}
+
+void APlayer_Muriel::HandleMurielUltState()
+{
+	switch (MurielUltState)
+	{
+	case EMurielUltState::None:
+		break;
+	case EMurielUltState::Ascending:
+		GetCharacterMovement()->Launch(GetActorUpVector() * UltMaxRange * 0.35f + (UltAttackLocation - GetActorLocation()) * 0.3f);
+		break;
+	case EMurielUltState::Descending:
+		GetCharacterMovement()->Launch(-GetActorUpVector() * UltMovementForce * 10.f + (UltAttackLocation - GetActorLocation()) * 1.5f);
+		break;
+	case EMurielUltState::Landing:
+		break;
+	}
+}
+
 void APlayer_Muriel::ApplyDamage(float amount)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));
+	if(PlayerCombatState != ECombatState::Invincible)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));	
+	}
 }

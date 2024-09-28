@@ -92,6 +92,13 @@ void APlayer_Base::SetPlayerActionState(EPlayerActionState NewActionState)
 	HandleActionState();
 }
 
+void APlayer_Base::SetCombatState(ECombatState NewCombatState)
+{
+	if(PlayerCombatState == NewCombatState) return;
+
+	PlayerCombatState = NewCombatState;
+}
+
 void APlayer_Base::HandleMovementState()
 {
 	switch (PlayerMovementState)
