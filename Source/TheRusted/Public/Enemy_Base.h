@@ -15,6 +15,7 @@ class THERUSTED_API AEnemy_Base : public ACharacter_Base
 {
 	GENERATED_BODY()
 protected:
+	AEnemy_Base();
 	virtual void BeginPlay() override;
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -26,5 +27,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EnemyState")
 	float currentHP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float MaxHP;	
+	float MaxHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	USkeletalMeshComponent* WeaponMesh;
 };
