@@ -3,12 +3,12 @@
 
 #include "AN_Attack.h"
 
-#include "Player_Base.h"
+#include "Enemy_Base.h"
 
 void UAN_Attack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
 	Super::Notify(MeshComp, Animation);
-	if (APlayer_Base* Player = Cast<APlayer_Base>(MeshComp->GetOwner())) {
-		Player->Attack();
+	if (AEnemy_Base* Enemy = Cast<AEnemy_Base>(MeshComp->GetOwner())) {
+		Enemy->Attack();
 	}                                                                
 }

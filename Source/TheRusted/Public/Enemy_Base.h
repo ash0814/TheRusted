@@ -19,6 +19,14 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	bool bCanMove = true;
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	bool bCanAttack = true;
+
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	virtual void Attack();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	int32 dropItemID;
@@ -26,5 +34,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EnemyState")
 	float currentHP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float MaxHP;	
+	float MaxHP;
+
+	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 10000.f);
 };
