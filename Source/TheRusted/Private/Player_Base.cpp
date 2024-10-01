@@ -317,7 +317,7 @@ void APlayer_Base::Attack()
 
 float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	SetPlayerMovementState(EPlayerMovementState::Stopped);
+	//SetPlayerMovementState(EPlayerMovementState::Stopped);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	return 0.0f;
 }
