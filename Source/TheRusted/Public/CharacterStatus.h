@@ -14,6 +14,15 @@ public:
 	~CharacterStatus();
 };
 
+UENUM(BlueprintType)
+enum class ECombatState : uint8
+{
+	None UMETA(DisplayName = "None"),
+	Attacking UMETA(DisplayName = "Attacking"),
+	Defending UMETA(DisplayName = "Defending"),
+	Invincible UMETA(DisplayName = "Invincible")
+};
+
 USTRUCT(Atomic, BlueprintType)
 struct FBasicStatus
 {

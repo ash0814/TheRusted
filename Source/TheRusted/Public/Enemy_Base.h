@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	int32 dropItemID;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="EnemyState")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
 	float currentHP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
 	float MaxHP;

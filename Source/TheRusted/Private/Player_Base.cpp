@@ -92,6 +92,13 @@ void APlayer_Base::SetPlayerActionState(EPlayerActionState NewActionState)
 	HandleActionState();
 }
 
+void APlayer_Base::SetCombatState(ECombatState NewCombatState)
+{
+	if(PlayerCombatState == NewCombatState) return;
+
+	PlayerCombatState = NewCombatState;
+}
+
 void APlayer_Base::HandleMovementState()
 {
 	switch (PlayerMovementState)
@@ -310,7 +317,7 @@ void APlayer_Base::Attack()
 
 float APlayer_Base::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	SetPlayerMovementState(EPlayerMovementState::Stopped);
+	//SetPlayerMovementState(EPlayerMovementState::Stopped);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	return 0.0f;
 }
@@ -320,20 +327,15 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRang
 	FHitResult Hit;
 	FVector StartLocation = GetMesh()->GetSocketLocation(socketName);
 	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
-	//StartLocation
-	FRotator LookAtRotator;
-	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, 5.f, 0, 2.f);
 	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
 	if (result)
 	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, Hit.ImpactPoint);
+		EndLocation = Hit.ImpactPoint;
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
 	}
-	else
-	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
-	}
+	FRotator LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
+	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, 5.f, 0, 2.f);
+	//DrawDebugLine(GetWorld(), EndLocation, EndLocation + FVector(0, 0, EndLocation.Z + AttackRange), FColor::Red, true, 5.f, 0, 20.f);
 	return UKismetMathLibrary::MakeTransform(StartLocation, LookAtRotator);
 }
 
