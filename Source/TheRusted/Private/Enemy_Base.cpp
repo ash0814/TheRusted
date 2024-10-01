@@ -3,6 +3,11 @@
 
 #include "Enemy_Base.h"
 
+AEnemy_Base::AEnemy_Base()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void AEnemy_Base::BeginPlay()
 {
 	Super::BeginPlay();
