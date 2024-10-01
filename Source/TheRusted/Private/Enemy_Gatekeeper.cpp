@@ -50,3 +50,9 @@ float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEven
 	}
 	return 0.0f;
 }
+
+void AEnemy_Gatekeeper::Attack()
+{
+	// play montage
+	PlayAnimMontage(AM_AttackMontage);
+}
