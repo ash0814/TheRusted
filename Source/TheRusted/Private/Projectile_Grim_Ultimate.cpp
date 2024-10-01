@@ -34,12 +34,12 @@ void AProjectile_Grim_Ultimate::OnComponentHit(UPrimitiveComponent* HitComponent
 	if(OtherComp == nullptr)
 		return;
     	
-	if(OtherActor->IsA(APlayer_Base::StaticClass()))
+	if(OtherActor->IsA(AEnemy_Base::StaticClass()))
 		return;
     
 	bHit = true;
     	
-	if(OtherActor->IsA(AEnemy_Base::StaticClass()))
+	if(OtherActor->IsA(APlayer_Base::StaticClass()))
 	{
 		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_HitCharacter, Hit.ImpactPoint, UKismetMathLibrary::MakeRotFromZ(Hit.ImpactNormal));
