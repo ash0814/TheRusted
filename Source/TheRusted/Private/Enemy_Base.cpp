@@ -6,8 +6,6 @@
 AEnemy_Base::AEnemy_Base()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetupAttachment(GetMesh(), FName("rightHandSocket"));
 }
 
 void AEnemy_Base::BeginPlay()
