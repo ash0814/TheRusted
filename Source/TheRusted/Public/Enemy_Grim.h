@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Enemy_Base.h"
-#include "Player_Base.h"
 #include "Enemy_Grim.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class THERUSTED_API AEnemy_Grim : public APlayer_Base
+class THERUSTED_API AEnemy_Grim : public AEnemy_Base
 {
 	GENERATED_BODY()
 public:
@@ -20,9 +19,20 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Attack_Primary() override;
-	virtual void Attack_Strong() override;
-	virtual void Attack_Ultimate() override;	
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_LevelStart;
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_Attack_Primary;
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_Attack_Strong;
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_Attack_Ultimate;
+	UPROPERTY(EditAnywhere, Category = Animation)
+	class UAnimMontage* AM_Hit;
+	
+	void Attack_Primary();
+	void Attack_Strong();
+	void Attack_Ultimate();	
 	virtual void Attack() override;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")

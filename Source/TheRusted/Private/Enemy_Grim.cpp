@@ -54,6 +54,9 @@ void AEnemy_Grim::Attack_Ultimate()
 
 void AEnemy_Grim::Attack()
 {
+	if(!bCanAttack)	
+		return;
+
 	FTransform FireTransform;
 	if(SelectedProjectile == Projectiles[0])
 	{
