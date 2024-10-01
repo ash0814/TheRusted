@@ -30,33 +30,33 @@ void AEnemy_Grim::BeginPlay()
 
 void AEnemy_Grim::Attack_Primary()
 {
-	//if (bCanAttack) {
+	if (bCanAttack)
+	{
 		SelectedProjectile = Projectiles[0];
 		MontagePlay(AM_Attack_Primary);
-	//}
+	}
 }
 
 void AEnemy_Grim::Attack_Strong()
 {
-	//if (bCanAttack) {
+	if (bCanAttack)
+	{
 		SelectedProjectile = Projectiles[1];
 		MontagePlay(AM_Attack_Strong);
-	//}
+	}
 }
 
 void AEnemy_Grim::Attack_Ultimate()
 {
-	//if (bCanAttack) {
+	if (bCanAttack)
+	{
 		SelectedProjectile = Projectiles[2];
 		MontagePlay(AM_Attack_Ultimate);
-	//}
+	}
 }
 
 void AEnemy_Grim::Attack()
 {
-	if(!bCanAttack)	
-		return;
-
 	FTransform FireTransform;
 	if(SelectedProjectile == Projectiles[0])
 	{
@@ -74,6 +74,27 @@ void AEnemy_Grim::Attack()
 	DrawDebugDirectionalArrow(GetWorld(), FireTransform.GetLocation(), FireTransform.GetLocation() + FireTransform.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 	
 	GetWorld()->SpawnActor<AProjectile_Base>(SelectedProjectile, FireTransform);
+}
+
+void AEnemy_Grim::Attacker()
+{
+	switch(FMath::RandRange(0,2))
+	{
+		case 0:
+			Attack_Primary();
+			break;
+		
+		case 1:
+			Attack_Strong();
+			break;
+		
+		case 2:
+			Attack_Ultimate();
+			break;
+
+		default:
+			Attack_Primary();
+	}
 }
 
 float AEnemy_Grim::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
