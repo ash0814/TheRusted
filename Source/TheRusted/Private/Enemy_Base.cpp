@@ -2,9 +2,14 @@
 
 
 #include "Enemy_Base.h"
-
 #include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+
+AEnemy_Base::AEnemy_Base()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 
 void AEnemy_Base::BeginPlay()
 {

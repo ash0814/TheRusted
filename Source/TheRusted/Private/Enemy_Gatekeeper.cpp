@@ -7,7 +7,13 @@
 AEnemy_Gatekeeper::AEnemy_Gatekeeper()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/SciFi_Robot/MESHES/SCIFI_ROBOT_IK_SK.SCIFI_ROBOT_IK_SK'"));
+	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Enemy/Gatekeeper/SCIFI_ROBOT_IK_SK1.SCIFI_ROBOT_IK_SK1'"));
+	
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetRelativeLocationAndRotation(FVector(-2.0f, 5.0f, 0.0f), FRotator(10.0f, -130.0f, 0.0f));
+	WeaponMesh->SetupAttachment(GetMesh(), FName("rightHandMiddleSocket"));
+	
+
 	currentHP = 100.0f;
 	MaxHP = 100.0f;
 }
