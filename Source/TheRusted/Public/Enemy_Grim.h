@@ -26,8 +26,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Strong;
 	UPROPERTY(EditAnywhere, Category = Animation)
-	class UAnimMontage* AM_Charge_Ultimate;
-	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Attack_Ultimate;
 	UPROPERTY(EditAnywhere, Category = Animation)
 	class UAnimMontage* AM_Hit;

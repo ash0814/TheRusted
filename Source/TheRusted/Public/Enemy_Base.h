@@ -20,9 +20,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
-	UPROPERTY(EditAnywhere, Category = "Movement")
+	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
 	bool bCanMove = true;
-	UPROPERTY(EditAnywhere, Category = "Movement")
+	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
 	bool bCanAttack = true;
 
 	UFUNCTION(BlueprintCallable, Category = "Attack")
