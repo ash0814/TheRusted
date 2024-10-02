@@ -7,7 +7,8 @@ AEnemy_Healer::AEnemy_Healer()
 {
 	// 무기 메쉬 컴포넌트
 	WeaponMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMeshComp->SetupAttachment(GetMesh());
+	WeaponMeshComp->SetupAttachment(GetMesh(), FName(TEXT("AK47")));
+	
 }
 
 void AEnemy_Healer::BeginPlay()
