@@ -26,10 +26,12 @@ void AEnemy_Gatekeeper::BeginPlay()
 void AEnemy_Gatekeeper::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 }
 
 void AEnemy_Gatekeeper::Die()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Die"));
 	// get gamemode
 	ATheRustedGameModeBase* _gameMode = Cast<ATheRustedGameModeBase>(GetWorld()->GetAuthGameMode());
 	if (_gameMode)
@@ -37,16 +39,30 @@ void AEnemy_Gatekeeper::Die()
 		// add score
 		_gameMode->SetCanStoreOpen(true);
 	}
-	Destroy();
+	// get anim instance
+	//UAnimInstance* _animInstance = GetMesh()->GetAnimInstance();
+	//// check if anim montage is playing
+	//if (_animInstance->Montage_IsPlaying(AM_DeathMontage))
+	//{
+	//	// stop montage
+	//	_animInstance->Montage_Stop(0.0f, AM_DeathMontage);
+	//}
+	//Destroy();
+	bIsDead = true;
+	SetActorEnableCollision(false);
+	//SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
 }
 
 float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
+	MontagePlay(AM_HitMontage);
 	currentHP -= Damage;
 	if (currentHP <= 0)
 	{
 		Die();
+		//MontagePlay(AM_DeathMontage);
 	}
 	return 0.0f;
 }
@@ -54,5 +70,10 @@ float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEven
 void AEnemy_Gatekeeper::Attack()
 {
 	// play montage
-	PlayAnimMontage(AM_AttackMontage);
+	MontagePlay(AM_AttackMontage);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GateKeeper Attack"));
+	
+	// get weapon mesh socket name 'muzzle'
+	FVector FirePosition = WeaponMesh->GetSocketLocation(FName("Muzzle"));
+	FRotator FireRotation = GetActorForwardVector().Rotation();
 }

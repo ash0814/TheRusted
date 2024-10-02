@@ -24,8 +24,17 @@ protected:
 public:
 	void Die();
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
+	UFUNCTION(BlueprintCallable)
 	virtual void Attack() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	class UAnimMontage* AM_AttackMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_HitMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_DeathMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsDead = false;
 };
