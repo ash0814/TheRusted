@@ -3,6 +3,7 @@
 
 #include "Enemy_Gatekeeper.h"
 #include "TheRustedGameModeBase.h"
+#include "Projectile_Gatekeeper.h"
 
 AEnemy_Gatekeeper::AEnemy_Gatekeeper()
 {
@@ -10,8 +11,10 @@ AEnemy_Gatekeeper::AEnemy_Gatekeeper()
 	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/Enemy/Gatekeeper/SCIFI_ROBOT_IK_SK1.SCIFI_ROBOT_IK_SK1'"));
 	
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetRelativeLocationAndRotation(FVector(-2.0f, 5.0f, 0.0f), FRotator(10.0f, -130.0f, 0.0f));
-	WeaponMesh->SetupAttachment(GetMesh(), FName("rightHandMiddleSocket"));
+	WeaponMesh->SetRelativeLocationAndRotation(FVector(-2.0f, 5.0f, 0.0f), FRotator(-6.5, -260.0f, -8.0f));
+	//(Pitch = -6.500000, Yaw = -260.000000, Roll = -8.000000)
+	
+	WeaponMesh->SetupAttachment(GetMesh(), FName("rightHandSocket"));
 	
 
 	currentHP = 100.0f;
@@ -52,6 +55,7 @@ void AEnemy_Gatekeeper::Die()
 	SetActorEnableCollision(false);
 	//SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
+	OnDieSetState();
 }
 
 float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -71,9 +75,15 @@ void AEnemy_Gatekeeper::Attack()
 {
 	// play montage
 	MontagePlay(AM_AttackMontage);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GateKeeper Attack"));
-	
-	// get weapon mesh socket name 'muzzle'
+	// wait until montage is finished
+
+}
+
+void AEnemy_Gatekeeper::SpawnBullet()
+{
 	FVector FirePosition = WeaponMesh->GetSocketLocation(FName("Muzzle"));
 	FRotator FireRotation = GetActorForwardVector().Rotation();
+	// spawn projectile
+	GetWorld()->SpawnActor<AProjectile_Gatekeeper>(AProjectile_Gatekeeper::StaticClass(), FirePosition, FireRotation);
 }
+
