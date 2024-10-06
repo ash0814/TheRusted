@@ -21,6 +21,9 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	virtual void Attack() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
 	class USkeletalMeshComponent* MainWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")

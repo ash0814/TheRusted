@@ -7,7 +7,6 @@
 
 void UAN_Attack::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
 {
-	Super::Notify(MeshComp, Animation);
 	if (AEnemy_Base* Enemy = Cast<AEnemy_Base>(MeshComp->GetOwner())) {
 		Enemy->Attack();
 	}                                                                
