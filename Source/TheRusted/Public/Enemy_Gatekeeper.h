@@ -30,8 +30,8 @@ public:
 
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	
-	UFUNCTION(BlueprintCallable)
-	virtual void Attack() override;
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void Attack();
 
 	void SpawnBullet();
 

@@ -189,6 +189,15 @@ void APlayer_Muriel::ApplyDamage(float amount)
 {
 	if(PlayerCombatState != ECombatState::Invincible)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));	
+		if (BasicStatus.SP > 0)
+		{
+			BasicStatus.AddSP(-1);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("Apply SP Point Once!"));
+			return;
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));
+			BasicStatus.AddHP(amount * -1);
+		}
 	}
 }

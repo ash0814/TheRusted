@@ -42,18 +42,9 @@ void AEnemy_Gatekeeper::Die()
 		// add score
 		_gameMode->SetCanStoreOpen(true);
 	}
-	// get anim instance
-	//UAnimInstance* _animInstance = GetMesh()->GetAnimInstance();
-	//// check if anim montage is playing
-	//if (_animInstance->Montage_IsPlaying(AM_DeathMontage))
-	//{
-	//	// stop montage
-	//	_animInstance->Montage_Stop(0.0f, AM_DeathMontage);
-	//}
-	//Destroy();
+
 	bIsDead = true;
 	SetActorEnableCollision(false);
-	//SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
 	OnDieSetState();
 }
@@ -66,18 +57,15 @@ float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEven
 	if (currentHP <= 0)
 	{
 		Die();
-		//MontagePlay(AM_DeathMontage);
 	}
 	return 0.0f;
 }
 
-void AEnemy_Gatekeeper::Attack()
-{
-	// play montage
-	MontagePlay(AM_AttackMontage);
-	// wait until montage is finished
-
-}
+//void AEnemy_Gatekeeper::Attack()
+//{
+//	//PlayAnimMontage(AM_AttackMontage);
+//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("GateKeeper Attack"));
+//}
 
 void AEnemy_Gatekeeper::SpawnBullet()
 {
