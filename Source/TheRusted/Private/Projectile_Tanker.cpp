@@ -8,6 +8,7 @@
 #include "Components/SphereComponent.h"
 #include "ShieldComponent.h"
 #include "Enemy_Tanker.h"
+#include "Kismet/GameplayStatics.h"
 
 AProjectile_Tanker::AProjectile_Tanker()
 {
@@ -37,7 +38,8 @@ void AProjectile_Tanker::OnComponentHit(UPrimitiveComponent* HitComponent, AActo
 		APlayer_Muriel* _player = Cast<APlayer_Muriel>(OtherActor);
 		if (_player)
 		{
-			_player->ApplyDamage(10);
+			UGameplayStatics::ApplyDamage(_player, 10, nullptr, this, nullptr);
+			/*_player->ApplyDamage(10);*/
 		}
 	}
 	Destroy();
