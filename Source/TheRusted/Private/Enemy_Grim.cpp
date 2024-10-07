@@ -5,6 +5,7 @@
 
 #include "Projectile_Base.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AEnemy_Grim::AEnemy_Grim()
 {
@@ -99,6 +100,27 @@ void AEnemy_Grim::Attacker()
 
 float AEnemy_Grim::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	MontagePlay(AM_Hit);
+	currentHP -= DamageAmount;
+
+	if(currentHP < 0 )
+	{
+		Death();
+	}
+	else
+	{
+		MontagePlay(AM_Hit);
+	}
+	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void AEnemy_Grim::Death()
+{
+	MontagePlay(AM_Death);
+}
+
+void AEnemy_Grim::ExcuteDestroy()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_Explosion, GetActorLocation(), GetActorRotation());
+	Destroy();
 }
