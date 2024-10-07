@@ -36,7 +36,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
 	float MaxHP;
 
-	
 	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 10000.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
