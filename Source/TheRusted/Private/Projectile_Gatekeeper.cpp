@@ -9,8 +9,6 @@
 
 AProjectile_Gatekeeper::AProjectile_Gatekeeper()
 {
-	ProjectileMovementComp->InitialSpeed = 3000;
-	ProjectileMovementComp->MaxSpeed = 3000;
 }
 
 void AProjectile_Gatekeeper::BeginPlay()
