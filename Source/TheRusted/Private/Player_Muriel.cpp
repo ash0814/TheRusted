@@ -32,8 +32,8 @@ void APlayer_Muriel::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Muriel Magazine is Empty"));
 	}
 	
-	SetPlayerMovementState(EPlayerMovementState::Stopped);
-	MontagePlay(AM_LevelStart);
+	// SetPlayerMovementState(EPlayerMovementState::Stopped);
+	// MontagePlay(AM_LevelStart);
 }
 
 
