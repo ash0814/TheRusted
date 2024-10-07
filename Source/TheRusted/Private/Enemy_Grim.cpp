@@ -45,6 +45,7 @@ void AEnemy_Grim::Attack_Strong()
 {
 	if (bCanAttack && isDead == false)
 	{
+		currentEP -= 50;
 		SelectedProjectile = Projectiles[1];
 		MontagePlay(AM_Attack_Strong);
 	}
@@ -54,6 +55,7 @@ void AEnemy_Grim::Attack_Ultimate()
 {
 	if (bCanAttack && isDead == false)
 	{
+		ULTGauge = 0;
 		SelectedProjectile = Projectiles[2];
 		MontagePlay(AM_Attack_Ultimate);
 	}
@@ -96,23 +98,26 @@ void AEnemy_Grim::Attacker()
 {
 	if(isDead)
 		return;
-	
-	switch(FMath::RandRange(0,2))
-	{
-		case 0:
-			Attack_Primary();
-			break;
-		
-		case 1:
-			Attack_Strong();
-			break;
-		
-		case 2:
-			Attack_Ultimate();
-			break;
 
-		default:
-			Attack_Primary();
+	if(!bCanAttack)
+		return;
+
+	if(ULTGauge >= MaxULTGauge)
+	{
+		if(FMath::RandBool())
+		{
+			UE_LOG(LogTemp, Display, TEXT("Attacker ULTGauge[%f] >= MaxULTGauge[%f]"),ULTGauge, MaxULTGauge);
+			Attack_Ultimate();	
+		}		
+	}
+	else if(currentEP >= 50)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Attacker currentEP[%f] >= 50"),currentEP);
+		Attack_Strong();
+	}
+	else
+	{
+		Attack_Primary();
 	}
 }
 

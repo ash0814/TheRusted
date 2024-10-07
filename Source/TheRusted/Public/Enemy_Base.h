@@ -37,10 +37,18 @@ public:
 	int32 dropItemID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float currentHP;
+	float currentHP = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float MaxHP;
-
+	float MaxHP = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float MaxEP = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float currentEP = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float MaxULTGauge = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float ULTGauge = 0.f;
+	
 	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 10000.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
