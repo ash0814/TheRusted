@@ -8,8 +8,8 @@
 
 AProjectile_Gatekeeper::AProjectile_Gatekeeper()
 {
-	ProjectileMovementComp->InitialSpeed = 300;
-	ProjectileMovementComp->MaxSpeed = 300;
+	ProjectileMovementComp->InitialSpeed = 3000;
+	ProjectileMovementComp->MaxSpeed = 3000;
 }
 
 void AProjectile_Gatekeeper::BeginPlay()
@@ -29,4 +29,5 @@ void AProjectile_Gatekeeper::OnComponentHit(UPrimitiveComponent* HitComponent, A
 			_player->ApplyDamage(10);
 		}
 	}
+	Destroy();
 }
