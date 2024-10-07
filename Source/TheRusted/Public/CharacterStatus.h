@@ -33,9 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float HP = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float MaxEP = 50.f;
+	float MaxEP = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float EP = 50.f;
+	float EP = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 MaxSP = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
