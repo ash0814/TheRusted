@@ -26,7 +26,12 @@ public:
 	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
 	bool bCanAttack = true;
 
+	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
+	bool isDead = false;
+
 	virtual void Attack();
+
+	virtual void Death();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	int32 dropItemID;

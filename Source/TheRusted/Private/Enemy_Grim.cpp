@@ -13,6 +13,9 @@ AEnemy_Grim::AEnemy_Grim()
 	GetCapsuleComponent()->SetCapsuleRadius(60);
 	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -130.0f), FRotator(0.0f, -90.0f, 0.0f));
+
+	MaxHP = 1000;
+	currentHP = 1000;
 }
 
 void AEnemy_Grim::BeginPlay()
@@ -31,7 +34,7 @@ void AEnemy_Grim::BeginPlay()
 
 void AEnemy_Grim::Attack_Primary()
 {
-	if (bCanAttack)
+	if (bCanAttack && isDead == false)
 	{
 		SelectedProjectile = Projectiles[0];
 		MontagePlay(AM_Attack_Primary);
@@ -40,7 +43,7 @@ void AEnemy_Grim::Attack_Primary()
 
 void AEnemy_Grim::Attack_Strong()
 {
-	if (bCanAttack)
+	if (bCanAttack && isDead == false)
 	{
 		SelectedProjectile = Projectiles[1];
 		MontagePlay(AM_Attack_Strong);
@@ -49,7 +52,7 @@ void AEnemy_Grim::Attack_Strong()
 
 void AEnemy_Grim::Attack_Ultimate()
 {
-	if (bCanAttack)
+	if (bCanAttack && isDead == false)
 	{
 		SelectedProjectile = Projectiles[2];
 		MontagePlay(AM_Attack_Ultimate);
@@ -58,6 +61,9 @@ void AEnemy_Grim::Attack_Ultimate()
 
 void AEnemy_Grim::Attack()
 {
+	if(isDead)
+		return;
+	
 	FTransform FireTransform;
 	if(SelectedProjectile == Projectiles[0])
 	{
@@ -77,8 +83,20 @@ void AEnemy_Grim::Attack()
 	GetWorld()->SpawnActor<AProjectile_Base>(SelectedProjectile, FireTransform);
 }
 
+void AEnemy_Grim::Death()
+{
+	UE_LOG(LogTemp, Display, TEXT("Death Grim"));
+
+	FTimerHandle DeathTimer;
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_Explosion, GetActorLocation(), GetActorRotation());
+	GetWorld()->GetTimerManager().SetTimer(DeathTimer, this, &AEnemy_Grim::ExcuteDestroy, 0.2f);
+}
+
 void AEnemy_Grim::Attacker()
 {
+	if(isDead)
+		return;
+	
 	switch(FMath::RandRange(0,2))
 	{
 		case 0:
@@ -100,11 +118,15 @@ void AEnemy_Grim::Attacker()
 
 float AEnemy_Grim::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
+	if(isDead)
+		return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
 	currentHP -= DamageAmount;
-
-	if(currentHP < 0 )
+	UE_LOG(LogTemp, Display, TEXT("currentHP: %f"), currentHP);
+	if(currentHP <= 0 && isDead == false)
 	{
-		Death();
+		isDead = true;
+		MontagePlay(AM_Death);
 	}
 	else
 	{
@@ -114,13 +136,7 @@ float AEnemy_Grim::TakeDamage(float DamageAmount, struct FDamageEvent const& Dam
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
-void AEnemy_Grim::Death()
-{
-	MontagePlay(AM_Death);
-}
-
 void AEnemy_Grim::ExcuteDestroy()
-{
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_Explosion, GetActorLocation(), GetActorRotation());
+{	
 	Destroy();
 }

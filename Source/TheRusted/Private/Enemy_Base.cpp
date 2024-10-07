@@ -43,6 +43,10 @@ void AEnemy_Base::Attack()
 	
 }
 
+void AEnemy_Base::Death()
+{
+}
+
 FTransform AEnemy_Base::Calc_AttackTransform(FName socketName, float AttackRange)
 {
 	FHitResult Hit;
