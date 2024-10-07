@@ -25,7 +25,7 @@ void AEnemy_Healer::Tick(float DeltaTime)
 
 void AEnemy_Healer::Healer_Attack()
 {
-	FVector FirePosition = WeaponMesh->GetSocketLocation(FName("AK47"));
+	FVector FirePosition = WeaponMeshComp->GetSocketLocation(FName("Muzzle"));
 	FRotator FireRotation = GetActorForwardVector().Rotation();
 	DrawDebugDirectionalArrow(GetWorld(), FirePosition, FirePosition + FireRotation.Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 	
