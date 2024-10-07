@@ -73,6 +73,6 @@ void AEnemy_Gatekeeper::SpawnBullet()
 	FVector FirePosition = WeaponMesh->GetSocketLocation(FName("Muzzle"));
 	FRotator FireRotation = GetActorForwardVector().Rotation();
 	// spawn projectile
-	GetWorld()->SpawnActor<AProjectile_Gatekeeper>(Bullet, FirePosition, FireRotation);
+	GetWorld()->SpawnActor<AProjectile_Base>(Bullet, FirePosition, FireRotation);
 }
 

@@ -44,4 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class AProjectile_Base> Bullet;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldComponent")
+	class UShieldComponent* ShieldComponent;
+
+	UFUNCTION(BlueprintCallable)
+	void SetShield();
 };
