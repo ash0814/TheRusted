@@ -14,6 +14,8 @@ AEnemy_Tanker::AEnemy_Tanker()
 	FireArrow= CreateDefaultSubobject<UArrowComponent>(TEXT("FireArrow"));
 	FireArrow->SetupAttachment(GetMesh(), FName("FireArrow"));
 	FireArrow->SetRelativeLocationAndRotation(FVector(0.0f, 3.0f, 160.0f), FRotator(0.0f, 90.0f, 0.0f));
+	
+	dropItemID = 2;
 }
 
 void AEnemy_Tanker::BeginPlay()
