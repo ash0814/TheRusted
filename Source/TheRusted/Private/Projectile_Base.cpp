@@ -13,7 +13,7 @@ AProjectile_Base::AProjectile_Base()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	SphereComp->SetCollisionProfileName("Projectile");
+	SphereComp->SetCollisionProfileName("BlockAll");
 	SphereComp->SetSphereRadius(10);
 	SetRootComponent(SphereComp);
 
