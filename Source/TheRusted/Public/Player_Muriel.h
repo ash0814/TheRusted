@@ -27,6 +27,7 @@ public:
 	APlayer_Muriel();
 protected:
 	virtual void BeginPlay() override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 public:
 
@@ -66,9 +67,11 @@ public:
 	TSubclassOf<class AProjectile_Base> magazine;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 	TArray<TSubclassOf<class AProjectile_Base>> magazines;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 	TSubclassOf<class UCameraShakeBase> UltCamerashake;
-	UFUNCTION(BlueprintCallable)
-	void ApplyDamage(float amount);
+// 	UFUNCTION(BlueprintCallable)
+// 	void ApplyDamage(float amount);
+
 	
 };

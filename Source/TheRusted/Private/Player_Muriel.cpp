@@ -36,6 +36,7 @@ void APlayer_Muriel::BeginPlay()
 	MontagePlay(AM_LevelStart);
 }
 
+
 void APlayer_Muriel::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -184,7 +185,8 @@ void APlayer_Muriel::HandleMurielUltState()
 	}
 }
 
-void APlayer_Muriel::ApplyDamage(float amount)
+float APlayer_Muriel::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator, AActor* DamageCauser)
 {
 	if(PlayerCombatState != ECombatState::Invincible)
 	{
@@ -192,11 +194,12 @@ void APlayer_Muriel::ApplyDamage(float amount)
 		{
 			BasicStatus.AddSP(-1);
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("Apply SP Point Once!"));
-			return;
+			return 0;
 		}
 		else {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));
-			BasicStatus.AddHP(amount * -1);
+			BasicStatus.AddHP(DamageAmount * -1);
 		}
-	}
+	}	
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
