@@ -20,7 +20,7 @@ void AProjectile_Muriel_StrongAttack::OnComponentHit(UPrimitiveComponent* HitCom
 	
 	if(OtherActor->IsA(APlayer_Base::StaticClass()))
 		return;
-
+	
 	bHit = true;
 	
 	if(OtherActor->IsA(AEnemy_Base::StaticClass()))
