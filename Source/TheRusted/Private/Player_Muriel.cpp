@@ -95,6 +95,7 @@ void APlayer_Muriel::Cancle_Ultimate()
 
 void APlayer_Muriel::Attack_Ultimate()
 {
+	BasicStatus.ULTGauge = 0;
 	SetCombatState(ECombatState::Invincible);
 	UltPreviewParticleComp->SetActive(false);
 	UltAttackLocation = GetUltTargetLocation();
