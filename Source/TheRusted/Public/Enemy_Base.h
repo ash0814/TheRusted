@@ -25,7 +25,7 @@ public:
 	bool bCanMove = true;
 	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
 	bool bCanAttack = true;
-	
+
 	virtual void Attack();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
@@ -40,5 +40,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	USkeletalMeshComponent* WeaponMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
+	TSubclassOf<class AProjectile_Base> Bullet;
 
 };

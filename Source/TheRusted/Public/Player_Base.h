@@ -180,4 +180,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void UseSPItem();
+
+	UFUNCTION(BlueprintCallable)
+	void ChargeUltimateGauge(float amount);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ultimate")
+	bool bCanUltimate = false;
 };

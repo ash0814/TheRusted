@@ -8,6 +8,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "TheRustedGameModeBase.h"
 
 AEnemy_Base::AEnemy_Base()
 {
@@ -27,7 +28,14 @@ void AEnemy_Base::Tick(float DeltaTime)
 
 float AEnemy_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	float ret = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+	auto GameMode = Cast<ATheRustedGameModeBase>(GetWorld()->GetAuthGameMode());
+	if (GameMode)
+	{
+		GameMode->AddPlayerUltimateGauge(30.0);
+	}
+	return ret;
 }
 
 void AEnemy_Base::Attack()

@@ -68,6 +68,7 @@ void APlayer_Muriel::Attack_Primary()
 
 void APlayer_Muriel::Attack_Strong()
 {
+	Super::Attack_Strong();
 	magazine = magazines[1];
 	MontagePlay(AM_Attack_Strong);
 }
@@ -103,12 +104,7 @@ void APlayer_Muriel::Attack_Ultimate()
 
 void APlayer_Muriel::Attack()
 {
-	//FTransform FireTransform = Calc_AttackTransform(FName("Muzzle_01"));
-	//DrawDebugLine(GetWorld(), FireTransform.GetLocation(), FireTransform.GetRotation().GetForwardVector() * 2000.f, FColor::Red, true, 5.f, 0, 2.f);
-	//DrawDebugDirectionalArrow(GetWorld(), FireTransform.GetLocation(), FireTransform.GetRotation().GetForwardVector() * 200.f, 50.0f, FColor::Red, false, 5.0f);
-	
 	GetWorld()->SpawnActor<AProjectile_Base>(magazine, FTransform(Calc_AttackTransform(FName("Muzzle_01"))));
-
 }
 
 void APlayer_Muriel::Landed(const FHitResult& Hit)
@@ -189,6 +185,15 @@ void APlayer_Muriel::ApplyDamage(float amount)
 {
 	if(PlayerCombatState != ECombatState::Invincible)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));	
+		if (BasicStatus.SP > 0)
+		{
+			BasicStatus.AddSP(-1);
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("Apply SP Point Once!"));
+			return;
+		}
+		else {
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));
+			BasicStatus.AddHP(amount * -1);
+		}
 	}
 }

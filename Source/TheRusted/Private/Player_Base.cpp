@@ -11,7 +11,9 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "InteractableInterface.h"
 
-
+#define QHealth 0
+#define QEnergy 1
+#define QShield 2
 // Sets default values
 APlayer_Base::APlayer_Base()
 {
@@ -216,20 +218,20 @@ void APlayer_Base::InputQuickSlot(const FInputActionValue& Value)
 	switch (_Index)
 	{
 		case 1:
-			if (QuickSlot[0] > 0) {
-				QuickSlot[0]--;
+			if (QuickSlot[QHealth] > 0) {
+				QuickSlot[QHealth]--;
 				UseHPItem();
 			}
 			break;
 		case 2:
-			if (QuickSlot[1] > 0) {
-				QuickSlot[1]--;
+			if (QuickSlot[QEnergy] > 0) {
+				QuickSlot[QEnergy]--;
 				UseEPItem();
 			}
 			break;
 		case 3:
-			if (QuickSlot[2] > 0) {
-				QuickSlot[2]--;
+			if (QuickSlot[QShield] > 0) {
+				QuickSlot[QShield]--;
 				UseSPItem();
 			}
 			break;
@@ -275,13 +277,14 @@ void APlayer_Base::Input_Attack_Strong(const FInputActionValue& Value)
 
 void APlayer_Base::Input_Attack_Ultimate(const FInputActionValue& Value)
 {
-	if(PlayerActionState == EPlayerActionState::None)
+	if(bCanUltimate && PlayerActionState == EPlayerActionState::None)
 	{
 		if(PlayerMovementState != EPlayerMovementState::Stopped && PlayerMovementState != EPlayerMovementState::Dashing)
 		{
 			SetPlayerActionState(EPlayerActionState::Charging_Ultimate);
 			SetPlayerMovementState(EPlayerMovementState::Stopped);
 		}
+		bCanUltimate = false;
 	}
 }
 
@@ -292,7 +295,14 @@ void APlayer_Base::Attack_Primary()
 
 void APlayer_Base::Attack_Strong()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Strong Attack"));
+	if (BasicStatus.EP >= 30)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Strong Attack"));
+		BasicStatus.AddEP(-30);
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Not Enough Energy"));
+	}
 }
 
 void APlayer_Base::Charge_Ultimate()
@@ -418,4 +428,16 @@ void APlayer_Base::UseEPItem()
 void APlayer_Base::UseSPItem()
 {
 	BasicStatus.AddSP(1);
+}
+
+void APlayer_Base::ChargeUltimateGauge(float amount)
+{
+	BasicStatus.AddULTGauge(amount);
+	if (BasicStatus.ULTGauge >= BasicStatus.MaxULTGauge)
+	{
+		bCanUltimate = true;
+	}
+	else {
+		bCanUltimate = false;
+	}
 }

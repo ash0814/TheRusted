@@ -22,6 +22,26 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void Die();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDieSetState();
+
 	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void Attack();
+
+	void SpawnBullet();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_AttackMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_HitMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_DeathMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsDead = false;
 };
