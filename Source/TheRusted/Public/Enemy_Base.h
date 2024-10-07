@@ -26,16 +26,29 @@ public:
 	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
 	bool bCanAttack = true;
 
+	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
+	bool isDead = false;
+
 	virtual void Attack();
+
+	virtual void Death();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	int32 dropItemID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float currentHP;
+	float currentHP = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
-	float MaxHP;
-
+	float MaxHP = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float MaxEP = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float currentEP = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float MaxULTGauge = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyState")
+	float ULTGauge = 0.f;
+	
 	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 10000.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
@@ -44,4 +57,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
 	TSubclassOf<class AProjectile_Base> Bullet;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldComponent")
+	class UShieldComponent* ShieldComponent;
+
+	UFUNCTION(BlueprintCallable)
+	void SetShield();
 };

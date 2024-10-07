@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 
@@ -34,6 +35,7 @@ void APlayer_Muriel::BeginPlay()
 	SetPlayerMovementState(EPlayerMovementState::Stopped);
 	MontagePlay(AM_LevelStart);
 }
+
 
 void APlayer_Muriel::Tick(float DeltaTime)
 {
@@ -118,6 +120,7 @@ void APlayer_Muriel::Landed(const FHitResult& Hit)
 	
 	if(MurielUltState == EMurielUltState::Descending)
 	{
+		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UltCamerashake);
 		SetCombatState(ECombatState::None);
 		if(AM_Ult_Land)
 		{
@@ -182,7 +185,8 @@ void APlayer_Muriel::HandleMurielUltState()
 	}
 }
 
-void APlayer_Muriel::ApplyDamage(float amount)
+float APlayer_Muriel::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+	class AController* EventInstigator, AActor* DamageCauser)
 {
 	if(PlayerCombatState != ECombatState::Invincible)
 	{
@@ -190,11 +194,12 @@ void APlayer_Muriel::ApplyDamage(float amount)
 		{
 			BasicStatus.AddSP(-1);
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Cyan, TEXT("Apply SP Point Once!"));
-			return;
+			return 0;
 		}
 		else {
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Muriel Apply Damage"));
-			BasicStatus.AddHP(amount * -1);
+			BasicStatus.AddHP(DamageAmount * -1);
 		}
-	}
+	}	
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

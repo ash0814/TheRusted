@@ -5,11 +5,10 @@
 #include "Player_Muriel.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AProjectile_Gatekeeper::AProjectile_Gatekeeper()
 {
-	ProjectileMovementComp->InitialSpeed = 3000;
-	ProjectileMovementComp->MaxSpeed = 3000;
 }
 
 void AProjectile_Gatekeeper::BeginPlay()
@@ -21,13 +20,7 @@ void AProjectile_Gatekeeper::BeginPlay()
 void AProjectile_Gatekeeper::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	//Super::OnComponentHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
-	if (OtherActor)
-	{
-		APlayer_Muriel* _player = Cast<APlayer_Muriel>(OtherActor);
-		if (_player)
-		{
-			_player->ApplyDamage(10);
-		}
-	}
+	UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
+
 	Destroy();
 }

@@ -9,10 +9,14 @@
 #include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "TheRustedGameModeBase.h"
+#include "ShieldComponent.h"
 
 AEnemy_Base::AEnemy_Base()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	ShieldComponent = CreateDefaultSubobject<UShieldComponent>(TEXT("ShieldComponent"));
+	
 }
 
 
@@ -41,6 +45,10 @@ float AEnemy_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& Dam
 void AEnemy_Base::Attack()
 {
 	
+}
+
+void AEnemy_Base::Death()
+{
 }
 
 FTransform AEnemy_Base::Calc_AttackTransform(FName socketName, float AttackRange)
@@ -78,4 +86,12 @@ FTransform AEnemy_Base::Calc_AttackTransform(FName socketName, float AttackRange
 	
 	FRotator LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
 	return UKismetMathLibrary::MakeTransform(StartLocation, LookAtRotator);
+}
+
+void AEnemy_Base::SetShield()
+{
+	if (ShieldComponent)
+	{
+		ShieldComponent->SpawnShield();
+	}
 }
