@@ -171,6 +171,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddItemToQuickSlot(EItemType ItemType);
+	void AddItemToQuickSlot(int32 ItemIndex);
 
 	UFUNCTION(BlueprintCallable)
 	void UseHPItem();
