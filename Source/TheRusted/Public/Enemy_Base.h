@@ -25,8 +25,7 @@ public:
 	bool bCanMove = true;
 	UPROPERTY(EditAnywhere, Blueprintable, Category = "Movement")
 	bool bCanAttack = true;
-
-	UFUNCTION(BlueprintCallable, Category = "Attack")
+	
 	virtual void Attack();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
