@@ -2,6 +2,10 @@
 
 
 #include "Enemy_Base.h"
+
+#include "AIController.h"
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "TheRustedGameModeBase.h"
@@ -44,19 +48,34 @@ FTransform AEnemy_Base::Calc_AttackTransform(FName socketName, float AttackRange
 	FHitResult Hit;
 	FVector StartLocation = GetMesh()->GetSocketLocation(socketName);
 	FVector EndLocation = StartLocation + GetArrowComponent()->GetForwardVector() * AttackRange;
-	//StartLocation
-	FRotator LookAtRotator;
-	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, 5.f, 0, 2.f);
-	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
-	if (result)
+
+	AAIController* aiController = GetController<AAIController>();
+
+	if(aiController)
 	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, Hit.ImpactPoint);
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
+		UBlackboardComponent* bb = aiController->GetBlackboardComponent();
+		if(bb)
+		{
+			UE_LOG(LogTemp, Warning,TEXT("AEnemy_Base::Calc_AttackTransform BlackBoard Checked"));
+			AActor* TargetActor = Cast<AActor>(bb->GetValueAsObject(FName(TEXT("TargetActor"))));
+
+			if(TargetActor)
+			{
+				UE_LOG(LogTemp, Warning,TEXT("AEnemy_Base::Calc_AttackTransform BlackBoard TargetActor : %s"), *TargetActor->GetName());
+				EndLocation = TargetActor->GetActorLocation();
+			}
+		}
 	}
 	else
 	{
-		LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
+		bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+		if (result)
+		{
+			EndLocation = Hit.ImpactPoint;
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
+		}
 	}
+	
+	FRotator LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
 	return UKismetMathLibrary::MakeTransform(StartLocation, LookAtRotator);
 }
