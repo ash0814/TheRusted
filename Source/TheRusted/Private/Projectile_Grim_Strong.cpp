@@ -4,6 +4,7 @@
 #include "Projectile_Grim_Strong.h"
 
 #include "Enemy_Base.h"
+#include "Enemy_Grim.h"
 #include "Player_Base.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -41,6 +42,19 @@ void AProjectile_Grim_Strong::OnComponentHit(UPrimitiveComponent* HitComponent, 
     	
 	if(OtherActor->IsA(APlayer_Base::StaticClass()))
 	{
+		TArray<AActor*> FoundActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemy_Grim::StaticClass(), FoundActors);
+		for (AActor* Actor : FoundActors)
+		{
+			AEnemy_Grim* CustomActor = Cast<AEnemy_Grim>(Actor);
+			if (CustomActor)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("PreUP:%f"), CustomActor->ULTGauge);
+				CustomActor->ULTGauge += 10;
+				UE_LOG(LogTemp, Warning, TEXT("CurrentUP:%f"), CustomActor->ULTGauge);
+			}
+		}
+		
 		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_HitCharacter, Hit.ImpactPoint, UKismetMathLibrary::MakeRotFromZ(Hit.ImpactNormal));
 	}

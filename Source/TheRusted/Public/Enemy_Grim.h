@@ -36,7 +36,7 @@ public:
 	void Attack_Strong();
 	void Attack_Ultimate();	
 	virtual void Attack() override;
-
+	virtual void Death() override;
 	UFUNCTION(BlueprintCallable, Category = "Attack")
 	void Attacker();
 	
@@ -47,9 +47,7 @@ public:
 	TArray<TSubclassOf<class AProjectile_Base>> Projectiles;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-
-	void Death();
-
+	
 	UPROPERTY(EditAnywhere, Category = "VFX")
 	UParticleSystem* VFX_Explosion;
 
