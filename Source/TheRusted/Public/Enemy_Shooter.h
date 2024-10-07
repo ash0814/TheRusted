@@ -28,5 +28,5 @@ public:
 	class USkeletalMeshComponent* MainWeapon;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
 	TSubclassOf<class AProjectile_Base> Magazine;
-	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 };

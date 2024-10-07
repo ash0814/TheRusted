@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 
@@ -118,6 +119,7 @@ void APlayer_Muriel::Landed(const FHitResult& Hit)
 	
 	if(MurielUltState == EMurielUltState::Descending)
 	{
+		UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0)->StartCameraShake(UltCamerashake);
 		SetCombatState(ECombatState::None);
 		if(AM_Ult_Land)
 		{
