@@ -23,10 +23,11 @@ void AEnemy_Healer::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AEnemy_Healer::Attack()
+void AEnemy_Healer::Healer_Attack()
 {
-	FTransform Transform;
-	DrawDebugDirectionalArrow(GetWorld(), Transform.GetLocation(), Transform.GetLocation() + Transform.GetRotation().Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
+	FVector FirePosition = WeaponMesh->GetSocketLocation(FName("AK47"));
+	FRotator FireRotation = GetActorForwardVector().Rotation();
+	DrawDebugDirectionalArrow(GetWorld(), FirePosition, FirePosition + FireRotation.Vector() * 100.0f, 50.0f, FColor::Red, false, 5.0f);
 	
-	GetWorld()->SpawnActor<AProjectile_Healer>(magazine, Transform);
+	GetWorld()->SpawnActor<AProjectile_Healer>(magazine, FirePosition,FireRotation);
 }

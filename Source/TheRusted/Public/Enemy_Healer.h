@@ -20,11 +20,12 @@ protected:
 	class UStaticMeshComponent* WeaponMeshComp;
 public:
 	virtual void Tick(float DeltaTime) override;
-	virtual void Attack() override;
+	
+	UFUNCTION(BlueprintCallable, Category = "Attack")
+	void Healer_Attack();
 	
 	UPROPERTY(EditAnywhere,Category="Animation")
 	UAnimMontage* AttackAnimMontage;
 	UPROPERTY(EditAnywhere,Category = "Fire")
 	TSubclassOf<class AProjectile_Healer> magazine;
-	
 };
