@@ -29,4 +29,7 @@ public:
 	bool GetIsStoreOpen() { return bIsStoreOpen; }
 	UFUNCTION(BlueprintCallable)
 	void SetIsStoreOpen(bool bIsOpen) { bIsStoreOpen = bIsOpen; }
+
+	UFUNCTION(BlueprintCallable)
+	void AddPlayerUltimateGauge(float value);
 };

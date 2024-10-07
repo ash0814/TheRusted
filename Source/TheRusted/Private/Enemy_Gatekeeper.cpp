@@ -17,8 +17,8 @@ AEnemy_Gatekeeper::AEnemy_Gatekeeper()
 	WeaponMesh->SetupAttachment(GetMesh(), FName("rightHandSocket"));
 	
 
-	currentHP = 100.0f;
-	MaxHP = 100.0f;
+	currentHP = 1000.0f;
+	MaxHP = 1000.0f;
 }
 
 void AEnemy_Gatekeeper::BeginPlay()
@@ -51,6 +51,7 @@ void AEnemy_Gatekeeper::Die()
 
 float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
+	float ret = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
 	MontagePlay(AM_HitMontage);
 	currentHP -= Damage;
@@ -58,7 +59,7 @@ float AEnemy_Gatekeeper::TakeDamage(float Damage, FDamageEvent const& DamageEven
 	{
 		Die();
 	}
-	return 0.0f;
+	return ret + Damage;
 }
 
 //void AEnemy_Gatekeeper::Attack()
