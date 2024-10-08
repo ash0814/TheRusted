@@ -440,6 +440,11 @@ void APlayer_Base::AddItemToQuickSlot(EItemType ItemType)
 		QuickSlot[2]++;
 }
 
+void APlayer_Base::AddItemToQuickSlot(int32 ItemIndex)
+{
+	QuickSlot[ItemIndex]++;
+}
+
 void APlayer_Base::UseHPItem()
 {
 	BasicStatus.AddHP(100);

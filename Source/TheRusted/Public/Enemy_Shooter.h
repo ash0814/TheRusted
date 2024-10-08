@@ -22,6 +22,20 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDieSetState();
+
+	void Die();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	bool bIsDead = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TSubclassOf<class AItem> ItemDrop;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_HitMontage;
+
 	UFUNCTION()
 	virtual void Attack() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons")
