@@ -39,7 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	class UAnimMontage* AM_HitMontage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
 	bool bIsDead = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
