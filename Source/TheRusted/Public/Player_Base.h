@@ -83,6 +83,7 @@ public:
 	class UInputAction* IA_Interact;
 
 	EPlayerMovementState PlayerMovementState = EPlayerMovementState::Idle;
+	UPROPERTY(BlueprintReadWrite, Category = "State")
 	EPlayerActionState PlayerActionState = EPlayerActionState::None;
 	ECombatState PlayerCombatState = ECombatState::None;
 
