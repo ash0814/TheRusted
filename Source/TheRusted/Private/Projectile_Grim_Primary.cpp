@@ -58,12 +58,12 @@ void AProjectile_Grim_Primary::OnComponentHit(UPrimitiveComponent* HitComponent,
     			}
     		}
     		
-    		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
+    		UGameplayStatics::ApplyDamage(OtherActor, 5.0f, GetInstigatorController(), this, UDamageType::StaticClass());
     		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_HitCharacter, Hit.ImpactPoint, UKismetMathLibrary::MakeRotFromZ(Hit.ImpactNormal));
     	}
     	else
     	{
-    		UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
+    		UGameplayStatics::ApplyDamage(OtherActor, 5.0f, GetInstigatorController(), this, UDamageType::StaticClass());
     		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VFX_HitWorld, Hit.ImpactPoint, UKismetMathLibrary::MakeRotFromZ(Hit.ImpactNormal));
     	}
     	

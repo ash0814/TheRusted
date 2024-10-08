@@ -22,10 +22,27 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Attack")
-	void Healer_Attack();
+	void Healer_Attack(AActor* TargetActor);
 	
 	UPROPERTY(EditAnywhere,Category="Animation")
 	UAnimMontage* AttackAnimMontage;
 	UPROPERTY(EditAnywhere,Category = "Fire")
-	TSubclassOf<class AProjectile_Healer> magazine;
+	TSubclassOf<class AProjectile_Base> magazine;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDieSetState();
+
+	void Die();
+
+	virtual float TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	bool bIsDead = false;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	class UAnimMontage* AM_HitMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TSubclassOf<class AItem> ItemDrop;
 };

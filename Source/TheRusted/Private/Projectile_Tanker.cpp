@@ -38,7 +38,7 @@ void AProjectile_Tanker::OnComponentHit(UPrimitiveComponent* HitComponent, AActo
 		APlayer_Muriel* _player = Cast<APlayer_Muriel>(OtherActor);
 		if (_player)
 		{
-			UGameplayStatics::ApplyDamage(_player, 10, nullptr, this, nullptr);
+			UGameplayStatics::ApplyDamage(_player, 5, nullptr, this, nullptr);
 			/*_player->ApplyDamage(10);*/
 		}
 	}

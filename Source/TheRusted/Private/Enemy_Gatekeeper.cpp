@@ -15,10 +15,6 @@ AEnemy_Gatekeeper::AEnemy_Gatekeeper()
 	//(Pitch = -6.500000, Yaw = -260.000000, Roll = -8.000000)
 	
 	WeaponMesh->SetupAttachment(GetMesh(), FName("rightHandSocket"));
-	
-
-	currentHP = 1000.0f;
-	MaxHP = 1000.0f;
 }
 
 void AEnemy_Gatekeeper::BeginPlay()
