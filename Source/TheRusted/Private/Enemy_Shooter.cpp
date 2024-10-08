@@ -4,6 +4,7 @@
 #include "Enemy_Shooter.h"
 
 #include "Projectile_Base.h"
+#include "Item.h"
 
 AEnemy_Shooter::AEnemy_Shooter()
 {
@@ -25,6 +26,21 @@ void AEnemy_Shooter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AEnemy_Shooter::Die()
+{
+	bIsDead = true;
+	SetActorEnableCollision(false);
+	SetActorTickEnabled(false);
+
+	if (ItemDrop)
+	{
+		FTransform _transform = GetActorTransform();
+		GetWorld()->SpawnActor<AItem>(ItemDrop, _transform);
+	}
+
+	OnDieSetState();
+}
+
 void AEnemy_Shooter::Attack()
 {
 	Super::Attack();
@@ -36,12 +52,11 @@ float AEnemy_Shooter::TakeDamage(float DamageAmount, struct FDamageEvent const& 
 {
 	float ret = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("TakeDamage"));
-	//MontagePlay(AM_HitMontage);
+	MontagePlay(AM_HitMontage);
 	currentHP -= DamageAmount;
 	if (currentHP <= 0)
 	{
-		Destroy();
-		//Die();
+		Die();
 	}
 	return ret + DamageAmount;
 }
