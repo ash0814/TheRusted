@@ -147,6 +147,10 @@ public:
 
 	FTransform Calc_AttackTransform(FName socketName, float AttackRange = 10000.f);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TargetEnemy")
+	class AEnemy_Base* TargetEnemy;
+	void SetTargetEnemy();
+
 private:
 	AActor* CachedInteractableActor;
 	void PerformInteractionTrace();

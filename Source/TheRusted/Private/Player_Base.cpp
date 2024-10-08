@@ -2,6 +2,8 @@
 
 
 #include "Player_Base.h"
+
+#include "Enemy_Base.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/InputComponent.h"
@@ -58,6 +60,8 @@ void APlayer_Base::BeginPlay()
 void APlayer_Base::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	SetTargetEnemy();
 }
 
 // Called to bind functionality to input
@@ -337,16 +341,37 @@ FTransform APlayer_Base::Calc_AttackTransform(FName socketName, float AttackRang
 	FHitResult Hit;
 	FVector StartLocation = GetMesh()->GetSocketLocation(socketName);
 	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * AttackRange;
-	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility);
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Pawn);
 	if (result)
 	{
 		EndLocation = Hit.ImpactPoint;
+
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("hit Actor name: %s"), *Hit.GetActor()->GetName()));
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Start: %s, End: %s, LookAt: %s"), *StartLocation.ToString(), *EndLocation.ToString(), *LookAtRotator.ToString()));
 	}
 	FRotator LookAtRotator = UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation);
 	//DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Red, true, 5.f, 0, 2.f);
 	//DrawDebugLine(GetWorld(), EndLocation, EndLocation + FVector(0, 0, EndLocation.Z + AttackRange), FColor::Red, true, 5.f, 0, 20.f);
 	return UKismetMathLibrary::MakeTransform(StartLocation, LookAtRotator);
+}
+
+void APlayer_Base::SetTargetEnemy()
+{
+	FHitResult Hit;
+	FVector StartLocation = CameraComp->GetComponentLocation();
+	FVector EndLocation = StartLocation + CameraComp->GetForwardVector() * 10000;
+	bool result = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Pawn);
+
+	if (result)
+	{
+		auto enemy = Cast<AEnemy_Base>(Hit.GetActor());
+
+		if(enemy)
+		{
+			TargetEnemy = enemy;
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("TargetEnemy name: %s"), *Hit.GetActor()->GetName()));
+		}
+	}
 }
 
 void APlayer_Base::PerformInteractionTrace()
