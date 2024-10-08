@@ -14,8 +14,8 @@ AEnemy_Grim::AEnemy_Grim()
 	SetSkeletalMesh(TEXT("/Script/Engine.SkeletalMesh'/Game/ParagonGRIMexe/Characters/Heroes/GRIM/Meshes/GRIM_GDC.GRIM_GDC'"));
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -130.0f), FRotator(0.0f, -90.0f, 0.0f));
 
-	MaxHP = 1000;
-	currentHP = 1000;
+	MaxHP = 500;
+	currentHP = 500;
 }
 
 void AEnemy_Grim::BeginPlay()
