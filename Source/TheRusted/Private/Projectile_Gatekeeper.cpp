@@ -20,7 +20,7 @@ void AProjectile_Gatekeeper::BeginPlay()
 void AProjectile_Gatekeeper::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	//Super::OnComponentHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
-	UGameplayStatics::ApplyDamage(OtherActor, 10.0f, GetInstigatorController(), this, UDamageType::StaticClass());
+	UGameplayStatics::ApplyDamage(OtherActor, 5.0f, GetInstigatorController(), this, UDamageType::StaticClass());
 
 	Destroy();
 }

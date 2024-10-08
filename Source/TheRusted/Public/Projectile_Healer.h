@@ -13,17 +13,15 @@ UCLASS()
 class THERUSTED_API AProjectile_Healer : public AProjectile_Base
 {
 	GENERATED_BODY()
+private:
 	AProjectile_Healer();
+
 protected:
+	virtual void BeginPlay() override;
 	
-	// 무브먼트 컴포넌트
-	UPROPERTY(VisibleAnywhere,Category="Movement")
-	class UProjectileMovementComponent* PMovementComp;
-	// 콜라이더
-	UPROPERTY(VisibleAnywhere,Category="Collidor")
-	class USphereComponent* SphereCollComp;
-	// 메쉬
-	UPROPERTY(VisibleAnywhere,Category="Mesh")
-	class UStaticMeshComponent* SMeshComp;
-	
+	void OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
+
+public:
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayNiagaraEffect(FTransform hitTransform);
 };

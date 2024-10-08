@@ -22,12 +22,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Attack")
-	void Healer_Attack();
+	void Healer_Attack(AActor* TargetActor);
 	
 	UPROPERTY(EditAnywhere,Category="Animation")
 	UAnimMontage* AttackAnimMontage;
 	UPROPERTY(EditAnywhere,Category = "Fire")
-	TSubclassOf<class AProjectile_Healer> magazine;
+	TSubclassOf<class AProjectile_Base> magazine;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDieSetState();

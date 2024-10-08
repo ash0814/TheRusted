@@ -447,12 +447,12 @@ void APlayer_Base::AddItemToQuickSlot(int32 ItemIndex)
 
 void APlayer_Base::UseHPItem()
 {
-	BasicStatus.AddHP(100);
+	BasicStatus.AddHP(30);
 }
 
 void APlayer_Base::UseEPItem()
 {
-	BasicStatus.AddEP(100);
+	BasicStatus.AddEP(30);
 }
 
 void APlayer_Base::UseSPItem()

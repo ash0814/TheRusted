@@ -13,7 +13,7 @@ void UBeginAttackNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceB
 		Player->Attack();
 	}else if (AEnemy_Healer* Healer = Cast<AEnemy_Healer>(MeshComp->GetOwner()))
 	{
-		Healer->Healer_Attack();
+		//Healer->Healer_Attack();
 	}
 	else if (AEnemy_Gatekeeper* gk = Cast<AEnemy_Gatekeeper>(MeshComp->GetOwner())) {
 		gk->SpawnBullet();
