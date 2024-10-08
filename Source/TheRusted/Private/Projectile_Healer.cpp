@@ -2,29 +2,49 @@
 
 
 #include "Projectile_Healer.h"
-
-#include "NavigationSystemTypes.h"
-#include "Components/SphereComponent.h"
+#include "Player_Muriel.h"
+#include "Enemy_base.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Components/SphereComponent.h"
+#include "ShieldComponent.h"
+#include "Enemy_Tanker.h"
+#include "Enemy_Healer.h"
+#include "Kismet/GameplayStatics.h"
 
 AProjectile_Healer::AProjectile_Healer()
 {
-	PrimaryActorTick.bCanEverTick = true;
-	// 스피어 콜리전 컴포넌트
-	SphereCollComp = CreateDefaultSubobject<USphereComponent>(TEXT("MainCollidor"));
-	SphereCollComp->SetCollisionProfileName(TEXT("BlockAll"));
-	SphereCollComp->SetSphereRadius(13);
-	RootComponent = SphereCollComp;
+}
 
-	// 메쉬 컴포넌트
-	SMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SMeshComp->SetupAttachment(SphereCollComp);
-	SMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+void AProjectile_Healer::BeginPlay()
+{
+	Super::BeginPlay();
+	SphereComp->OnComponentHit.AddDynamic(this, &AProjectile_Healer::OnComponentHit);
+}
 
-	// 프로젝타일 컴포넌트
-	PMovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("PMovementComp"));
-	PMovementComp->SetUpdatedComponent(SphereCollComp);
-	PMovementComp->InitialSpeed = 3000.0f;
-	PMovementComp->MaxSpeed = 5000.0f;
-	PMovementComp->bShouldBounce = false;
+void AProjectile_Healer::OnComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	AEnemy_Base* _Enemy = Cast<AEnemy_Base>(OtherActor);
+	if (_Enemy)
+	{
+		if (Cast<AEnemy_Healer>(_Enemy))
+		{
+			return;
+		}
+		_Enemy->currentHP += 100;
+		if (_Enemy->currentHP > _Enemy->MaxHP)
+		{
+			_Enemy->currentHP = _Enemy->MaxHP;
+		}
+		// play niagara effect here
+		PlayNiagaraEffect(_Enemy->GetActorTransform());
+	
+	} else {
+		APlayer_Muriel* _player = Cast<APlayer_Muriel>(OtherActor);
+		if (_player)
+		{
+			UGameplayStatics::ApplyDamage(_player, 5, nullptr, this, nullptr);
+			/*_player->ApplyDamage(10);*/
+		}
+	}
+	Destroy();
 }
