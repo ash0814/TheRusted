@@ -92,6 +92,7 @@ void AEnemy_Base::SetShield()
 {
 	if (ShieldComponent)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Shield Spawned"));
 		ShieldComponent->SpawnShield();
 	}
 }

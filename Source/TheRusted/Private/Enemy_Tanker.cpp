@@ -60,6 +60,4 @@ void AEnemy_Tanker::SpawnBullet()
 {
 	FTransform _transform = FireArrow->GetComponentTransform();
 	GetWorld()->SpawnActor<AProjectile_Base>(Bullet, _transform);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, TEXT("SpawnShieldBullet"));
 }
