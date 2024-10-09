@@ -1,6 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# Rider user specific files
+.idea/
+
 # Compiled Object files
 *.slo
 *.lo
@@ -72,3 +75,24 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Large Asset Files
+Content/Paragon*
+Content/ModularSciFi/
+Content/SciFi_Robot/
+Content/SpaceGUI/
+Content/Dialogue_mocap/
+Content/HealPositive/
+Content/MegaMagicVFXBundle/
+Content/Sci-Fi_Starter_VFX_Pack_Niagara/
+
+# Starter Contents
+Content/StarterContent/
+
+# External Actors
+__External*
+
+#uproject file
+TheRusted.uproject
+*.uproject
+Plugins/Developer/RiderLink/*
